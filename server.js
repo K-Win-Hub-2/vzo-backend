@@ -14,8 +14,11 @@ const express = require('express'),
 app.use(cors({ origin: '*' }));
 
 const userUtil = require('./app/lib/userUtil');
+const { run } = require('./app/lib/registerAllServices');
 // mongoose.set('strictQuery', true);
 
+//seed services
+run()
 
 //mongoose.set('useCreateIndex', true) // to remove -> DeprecationWarning: collection.ensureIndex is deprecated. Use createIndex instead.
 
