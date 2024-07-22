@@ -15,27 +15,44 @@ let DamageItem = new Schema({
     type: Date,
     default: Date.now
   },
-  damageTotalUnit: {
+  damageTotal: {
     type: Number
   },
-  damageCurrentQty: {
+  originalTotalUnit: {
+    type: Number
+  },
+  originalCurrentQuantity: {
+    type: Number
+  },
+  totalUnitAfterDamage: {
+    type: Number
+  },
+  currentQuantityAfterDamage:{
+    type: Number
+  },
+  relatedItem: {
+    type: mongoose.Types.ObjectId,
+    ref: "Items"
+  },
+  relatedPackage: {
+    type: mongoose.Types.ObjectId,
+    ref: "ItemPackages"
+  },
+  personalUseTotalUnit: {
+    type: Number
+  },
+  personalUseCurrentUnit: {
     type: Number
   },
   remark: {
     type: String
   },
-  relatedAccessoryItem: {
-     type: mongoose.Schema.Types.ObjectId,
-     ref: "AccessoryItems"
-  },
-  relatedMedicineItem: {
-     type: mongoose.Schema.Types.ObjectId,
-     ref: "MedicineItems"
-  },
-  relatedProcedureItem: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "ProcedureItems"
- }
+  type: {
+    type: String,
+    enum: ['Damage', 'PersonalUse'],
+    required: true,
+    default: "Damage"
+  }
 });
 
 module.exports = mongoose.model('DamageItems', DamageItem);

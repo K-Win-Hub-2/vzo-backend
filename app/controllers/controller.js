@@ -12,7 +12,11 @@ exports.listAllData = async (req,res) => {
 exports.createData = async (req,res) => {
     const paths = req.path.split("/v1/")[1]
     let datas = await registerServiceHelper.getMethods(paths)[0][paths].create(req.body)
-    res.status(200).send({success: true, message: "Create Data", data: datas})
+    if(!datas.success){
+        res.status(200).send({success: false, message: datas.message})
+    }else{
+       res.status(200).send({success: true, message: "Create Data", data: datas}) 
+    }
 }
 
 exports.dataById = async (req,res) => {

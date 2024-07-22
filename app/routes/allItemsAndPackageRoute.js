@@ -6,13 +6,13 @@ const verifyToken = require('../lib/verifyToken');
 
 module.exports = (app) => {
 
-    app.route('/api/v1/damage-item')
+    app.route('/api/v1/stock-and-package')
         .get(listAllData)
-        .post(catchError(createData))
+    //     .post(catchError(createData))
 
         
-    app.route('/api/v1/damage-item/:id')
-        .get(catchError(dataById)) 
-        .put(catchError(updateDataById))
-        .delete(catchError(deleteDataById))
+    // app.route('/api/v1/stock-package/:id')
+    //     .get(catchError(dataById)) 
+    //     .put(catchError(updateDataById))
+    //     .delete(catchError(deleteDataById))
 };

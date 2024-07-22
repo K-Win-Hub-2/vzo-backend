@@ -48,6 +48,9 @@ let ItemSchema = new Schema({
     type: Number,
     default: 0
   },
+  reOrderQuantity: {
+    type: Number
+  },
   relatedSuperCategory: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'SuperCategories'
