@@ -1,6 +1,6 @@
-const path = require('path'),
-  rootPath = path.normalize(__dirname + '/..'),
-  env = process.env.NODE_ENV || 'production';
+const path = require('path');
+const rootPath = path.normalize(__dirname + '/..');
+const env = process.env.NODE_ENV || 'development';
 
 const config = {
   development: {
@@ -8,10 +8,7 @@ const config = {
     app: {
       name: 'Skin-Studio',
     },
-    //db: 'mongodb://127.0.0.1:3221', 
-    // db: 'mongodb+srv://projectDev-01:O9YGEyPQvKyA3Q48@kwintechinstances.usgwoxy.mongodb.net/Skin-Studio?retryWrites=true&w=majority',
     db: 'mongodb+srv://pyaephyokwintech:ko1996thandar129196@kwintechnologies2.ltn2iio.mongodb.net/vzo-backend',
-    //db: 'mongodb+srv://dbuser:P7qBNveg8bVO1d2z@cluster0.85ozwwv.mongodb.net/cherry-k?retryWrites=true&w=majority', 
     uploadsURI: ['./uploads/cherry-k/img', './uploads/cherry-k/excel', './uploads/cherry-k/history', './uploads/cherry-k/before', './uploads/cherry-k/after', './uploads/cherry-k/consent', './uploads/cherry-k/payment', './uploads/cherry-k/sendEmail'],
     dbName: 'Skin-Studio',
     maxLoginAttempts: 5,
@@ -29,9 +26,6 @@ const config = {
     app: {
       name: 'Clinic-Denovo',
     },
-    //db: 'mongodb://127.0.0.1:3221', 
-    //db: 'mongodb+srv://dbuser:P7qBNveg8bVO1d2z@cluster0.85ozwwv.mongodb.net/cherry-k?retryWrites=true&w=majority',
-    // db: 'mongodb+srv://projectDev-01:O9YGEyPQvKyA3Q48@kwintechinstances.usgwoxy.mongodb.net/Skin-Studio?retryWrites=true&w=majority',
     db: 'mongodb+srv://pyaephyokwintech:ko1996thandar129196@kwintechnologies2.ltn2iio.mongodb.net/vzo-backend',
     uploadsURI: ['./uploads/cherry-k/img', './uploads/cherry-k/excel', './uploads/cherry-k/history', './uploads/cherry-k/before', './uploads/cherry-k/after', './uploads/cherry-k/consent', './uploads/cherry-k/payment', './uploads/cherry-k/sendEmail'],
     dbName: 'Skin-Studio',

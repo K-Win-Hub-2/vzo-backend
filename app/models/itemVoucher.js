@@ -68,13 +68,23 @@ let ItemVoucherSchema = new Schema({
         enum: ['Paid', 'Partial', 'FOC']
     },
     relatedItem: [{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Items'
-    }],
+        item_id: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: 'Items'
+        },
+        price: Number,
+        quantity: Number,
+        discount: Number
+      }],
     relatedPackage: [{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'ItemPackages'
-    }],
+        item_id: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: 'ItemPackages'
+        },
+        price: Number,
+        quantity: Number,
+        discount: Number
+      }],
     code: {
         type: String
     },
@@ -133,7 +143,7 @@ let ItemVoucherSchema = new Schema({
     },
     tsType: {
         type: String,
-        enum: ["Standalone", "Package", "StandaloneAndPackage"]
+        enum: ["Standalone", "Package", "Combine"]
     },
     repay: [{
           type: mongoose.Schema.Types.ObjectId,

@@ -52,6 +52,12 @@ let ItemPackageSchema = new Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Items'
   },
+  description: {
+    type: String
+  },
+  status: {
+    type: String
+  },
   itemArray: [{
     item_id: {
       type: mongoose.Schema.Types.ObjectId,

@@ -6,4 +6,4 @@ exports.run = () => {
     //Register Service
     registerServiceHelper.setMethods(ServiceDatas)
     console.log("Services registered successfully")
-}
+}   

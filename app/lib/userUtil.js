@@ -95,13 +95,13 @@ const getClosingLastDay = async (id, start, end) => {
   return total
 }
 // Create a transporter using your Gmail account credentials
-const transporter = nodemailer.createTransport({
-  service: 'gmail',
-  auth: {
-    user: config.senderEmail, // Replace with your Gmail email address
-    pass: config.senderPassword // Replace with your Gmail password or an app-specific password if you have enabled 2-step verification
-  }
-});
+// const transporter = nodemailer.createTransport({
+//   service: 'gmail',
+//   auth: {
+//     user: config.senderEmail, // Replace with your Gmail email address
+//     pass: config.senderPassword // Replace with your Gmail password or an app-specific password if you have enabled 2-step verification
+//   }
+// });
 
 // Send the email
 async function sendEmail(mailOptions) {

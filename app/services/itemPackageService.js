@@ -20,7 +20,7 @@ exports.createitemsPackage = async (datas) => {
 }
 
 exports.getItemPackageById = async (id) => {
-       let result = await itemsPackage.findById(id).populate("relatedItem")
+       let result = await itemsPackage.findById(id).populate("relatedItem").populate({path: "itemArray", populate:{path: "item_id"}})
         return result
 }
 

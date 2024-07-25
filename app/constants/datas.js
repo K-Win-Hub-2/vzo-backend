@@ -2,6 +2,7 @@ const { getAllDamageItems, createDamageItems, updateDamageItem, getDamageItemByI
 const { getAllItemPackage, createitemsPackage, updateItemPackage, getItemPackageById, deleteItemPackage } = require("../services/itemPackageService");
 const { deleteItem, getItemById, updateItem, createItems, getAllItems } = require("../services/itemService");
 const { getAllItemTitles, createItemTitle, updateTitleItem, getItemTitleById, deleteTitleItem } = require("../services/itemTitleService");
+const { deleteItemVoucher, getItemVoucherById, updateItemVoucher, createItemVoucher, getAllItemVoucher } = require("../services/itemVoucherServices");
 const { getAllSuperCategories, createSuperCategories, updateCategories, getCategoriesById, deleteSuperCategories } = require("../services/superCategoryService");
 const { getAllStockIncludingRepackage } = require("../services/totalItemStockService");
 
@@ -51,5 +52,11 @@ exports.ServiceDatas = {
         listById: getDamageItemById,
         delete: deleteDamageItem
     },
-    "item-voucher":{}
+    "item-voucher":{
+        list: getAllItemVoucher,
+        create: createItemVoucher,
+        update: updateItemVoucher,
+        listById: getItemVoucherById,
+        delete: deleteItemVoucher
+    }
 }

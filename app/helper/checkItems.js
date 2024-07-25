@@ -1,6 +1,7 @@
 const itemPackage = require("../models/itemPackage")
 const items = require("../models/items")
 
+
 exports.checkItemsifPacakgeAvailable = async (req,res, next) => {
     const itemData = await items.findById(req.body.relatedItem).exec()
     const Values = itemData.totalUnit - req.body.totalUnit
@@ -44,6 +45,58 @@ exports.checkItemsArrayifPackageAvailable = async (req,res,next) => {
     else return res.status(200).send({success:false, message: "Package Item Array is required", data: null})
 }
 
+exports.checkItemArrayifItemIsAvailable = async (req,res, next) => {
+    if(req.body.relatedItem.length > 0) {
+        for(let i=0; i<req.body.relatedItem.length; i++){
+            const itemData = await items.findById(req.body.relatedItem[i].item_id).exec()
+            const Values = itemData.currentQuantity - req.body.relatedItem[i].quantity
+            if(Values < 0) return res.status(200).send({success:false, message: "Out of Stock", data: null})
+        }
+    }
+    next()
+}
+
+exports.checkPackageArrayifStockIsAvailable = async (req,res, next) => {
+    if(req.body.relatedPackage.length > 0) {
+        for(let i=0; i<req.body.relatedPackage.length; i++){
+            const itemData = await itemPackage.findById(req.body.relatedPackage[i].item_id).exec()
+            const Values = itemData.currentQuantity - req.body.relatedPackage[i].quantity
+            if(Values < 0) return res.status(200).send({success:false, message: "Out of Stock in Package", data: null})
+        }
+    }
+    next()
+}
+
+//relateditem from voucher
+exports.substractCurrentQuantityOfItemPackageArray = async (itemArray) => {
+    itemArray.forEach(async(itemData) => {
+     // Find the item asynchronously
+     let item = await itemPackage.findOne({_id: itemData.item_id});
+
+     // Calculate new values
+     item.currentQuantity -= itemData.quantity;
+     item.totalUnit = Math.ceil(item.currentQuantity * item.toUnit / item.fromUnit);
+
+     // Save the updated item asynchronously
+     await item.save();
+    })
+}
+
+//relatedPackcage from voucher
+exports.substractCurrentQuantityOfItem = async (itemArray) => {
+    itemArray.forEach(async(itemData) => {
+     // Find the item asynchronously
+     let item = await items.findOne({_id: itemData.item_id});
+     // Calculate new values
+     item.currentQuantity -= itemData.quantity;
+     item.totalUnit = Math.ceil(item.currentQuantity * item.toUnit / item.fromUnit);
+
+     // Save the updated item asynchronously
+     await item.save();
+
+    })
+}
+
 exports.substractItemsifPackageAvailable = async (id, total) => {
     try {
         // Find the item asynchronously
@@ -84,6 +137,7 @@ exports.subtractPackage = async (id, total) => {
         console.log("Error is ", e.message)
     }
 }
+
 
 exports.substractItemsArrayifPackageAvailable = async (itemArray) => {
     try{
