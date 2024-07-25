@@ -26,8 +26,6 @@ exports.getAllStockIncludingRepackage = async (datas) => {
             sellingPrice: item.sellingPrice,
             purchasePrice: item.purchasePrice,
             deliveryPrice: item.deliveryPrice,
-            // superCategoryName : item.relatedSuperCategory.name || null,
-            // titleName: item.relatedItemTitle.name || null,
             totalPurchase: item.totalPurchase,
         }
         result[item._id]["item"] = item
@@ -42,7 +40,8 @@ exports.getAllStockIncludingRepackage = async (datas) => {
             })
         })
        })
-        return result; 
+       const data = Object.values(result)
+       return data
     }catch(err){
         console.log("Error is", err.message)
     }
