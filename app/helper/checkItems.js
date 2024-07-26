@@ -36,7 +36,7 @@ exports.checkItemsArrayifPackageAvailable = async (req,res,next) => {
     if(req.body.itemArray && req.body.itemArray.length !=0){
         for(let i=0; i<req.body.itemArray.length; i++){
             const itemData = await items.findById(req.body.itemArray[i].item_id).exec()
-            const Values = itemData.totalUnit - req.body.itemArray[i].totalQuantity
+            const Values = itemData.totalUnit - ( req.body.itemArray[i].totalQuantity * req.body.currentQuantity)
             console.log("item is ", i, Values)
             if(Values < 0) return res.status(200).send({success:false, message: "You don't have enough items to create packages", data: null})
         }
@@ -139,11 +139,11 @@ exports.subtractPackage = async (id, total) => {
 }
 
 
-exports.substractItemsArrayifPackageAvailable = async (itemArray) => {
+exports.substractItemsArrayifPackageAvailable = async (itemArray, quantity) => {
     try{
         for(let i=0; i<itemArray.length; i++){
             items.findOne({_id:itemArray[i].item_id}).then(function(item){
-                item.totalUnit = item.totalUnit - itemArray[i].totalQuantity
+                item.totalUnit = item.totalUnit - ( itemArray[i].totalQuantity * quantity)
                 item.currentQuantity = Math.ceil(item.totalUnit * item.fromUnit/ item.toUnit)
                 item.save()
             })
