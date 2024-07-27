@@ -18,7 +18,7 @@ exports.checkItemsAndReturn = async(total,id) => {
 
 exports.checkPackageAndReturn = async(total,id) => {
     const itemData = await itemPackage.findById(id).exec()
-    const Values = itemData.totalUnit - total
+    const Values = itemData.currentQuantity - total
     if(Values < 0) return false
     return true
 }
@@ -124,8 +124,8 @@ exports.subtractPackage = async (id, total) => {
         let item = await itemPackage.findOne({_id: id});
 
         // Calculate new values
-        item.totalUnit -= total;
-        item.currentQuantity = Math.ceil(item.totalUnit * item.fromUnit / item.toUnit);
+        item.currentQuantity -= total;
+        item.totalUnit = Math.ceil(item.currentQuantity * item.toUnit / item.fromUnit);
 
         // Save the updated item asynchronously
         await item.save();
