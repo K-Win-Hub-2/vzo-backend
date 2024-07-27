@@ -27,7 +27,7 @@ exports.getAllStockIncludingRepackage = async (datas) => {
             totalPurchase: item.totalPurchase,
         }
         result[item._id]["item"] = item
-        result[item._id]["total"]["totalUnit"] = result[item._id]["item"].totalUnit
+        result[item._id]["total"]["totalUnit"] = item.totalUnit
         result[item._id]["total"].currentQuantity = Math.ceil((result[item._id]["total"].totalUnit * result[item._id]["total"].fromUnit) / result[item._id]["total"].toUnit) 
         result[item._id]["package"] = []
         queryRepackage.map(pk=>{           
