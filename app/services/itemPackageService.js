@@ -39,7 +39,8 @@ exports.updateItemPackage = async (id, datas) => {
               await data.save();
        })
        //clear item array
-       let result = await itemsPackage.findByIdAndUpdate(id, {$unset: {itemArray: ""}, $set: {...datas}}, { new: true })
+       await itemsPackage.findByIdAndUpdate(id, {$unset: {itemArray: ""}})
+       let result = await itemsPackage.findByIdAndUpdate(id, datas, {new: true})
        return result
 }
 
