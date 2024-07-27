@@ -2,6 +2,7 @@
 
 const { substractItemsifPackageAvailable, substractItemsArrayifPackageAvailable } = require("../helper/checkItems")
 const itemsPackage = require("../models/itemPackage")
+const items = require("../models/items")
 
 exports.getAllItemPackage = async (datas) => {
        let { i, c} = datas
@@ -25,7 +26,20 @@ exports.getItemPackageById = async (id) => {
 }
 
 exports.updateItemPackage = async (id, datas) => {
-       let result = await itemsPackage.findByIdAndUpdate(id, datas, { new: true })
+       let itemPackage =  await this.getItemPackageById(id)
+       let array = itemPackage.itemArray
+       array.map(async(arr) => {
+              let data = await items.findOne({_id: arr.item_id});
+
+              // Calculate new values
+              data.totalUnit += arr.totalQuantity;
+              data.currentQuantity  = Math.ceil(data.totalUnit * data.fromUnit / data.toUnit);
+      
+              // Save the updated item asynchronously
+              await data.save();
+       })
+       //clear item array
+       let result = await itemsPackage.findByIdAndUpdate(id, {$unset: {itemArray: ""}, $set: {...datas}}, { new: true })
        return result
 }
 
