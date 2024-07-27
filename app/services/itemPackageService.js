@@ -40,6 +40,7 @@ exports.updateItemPackage = async (id, datas) => {
        })
        //clear item array
        await itemsPackage.findByIdAndUpdate(id, {$unset: {itemArray: ""}})
+       await substractItemsArrayifPackageAvailable(datas.itemArray, datas.currentQuantity)
        let result = await itemsPackage.findByIdAndUpdate(id, datas, {new: true})
        return result
 }
