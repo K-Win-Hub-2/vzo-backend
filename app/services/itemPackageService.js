@@ -15,7 +15,7 @@ exports.getAllItemPackage = async (datas) => {
 exports.createitemsPackage = async (datas) => {
        let result = await itemsPackage.create(datas)
     //    await substractItemsifPackageAvailable(datas.relatedItem, datas.totalUnit)
-       await substractItemsArrayifPackageAvailable(datas.itemArray, data.currentQuantity)
+       await substractItemsArrayifPackageAvailable(datas.itemArray, datas.currentQuantity)
        return result
 }
 
