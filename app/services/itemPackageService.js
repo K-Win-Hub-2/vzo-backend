@@ -32,7 +32,7 @@ exports.updateItemPackage = async (id, datas) => {
               let data = await items.findOne({_id: arr.item_id});
 
               // Calculate new values
-              data.totalUnit += arr.totalQuantity;
+              data.totalUnit += ( arr.totalQuantity * itemPackage.currentQuantity );
               data.currentQuantity  = Math.ceil(data.totalUnit * data.fromUnit / data.toUnit);
       
               // Save the updated item asynchronously
