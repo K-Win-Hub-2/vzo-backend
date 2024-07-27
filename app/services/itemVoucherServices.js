@@ -3,6 +3,7 @@
 const { substractCurrentQuantityOfItem, substractCurrentQuantityOfItemPackageArray } = require("../helper/checkItems")
 const { generateVoucherCode } = require("../helper/voucherCodeGeneratorHelper")
 const itemVoucher = require("../models/itemVoucher")
+const { createDebt } = require("./debtService")
 
 exports.getAllItemVoucher = async (datas) => {
        let query = { isDeleted: false }
@@ -17,6 +18,12 @@ exports.createItemVoucher = async (datas) => {
        await substractCurrentQuantityOfItem(datas.relatedItem)
        await substractCurrentQuantityOfItemPackageArray(datas.relatedPackage)
        let result = await itemVoucher.create(datas)
+       //creating debt if balance exist
+       await createDebt({
+          relatedItemVoucher: result._id,
+          date: datas.createdAt,
+          balance: balance,
+          isPaid:false})
        return result; 
 }
 

@@ -9,23 +9,13 @@ let DebtSchema = new Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Patients'
     },
-    relatedTreatmentVoucher: {
+    relatedItemVoucher: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'TreatmentVouchers'
-    },
-    relatedMedicineSale: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'TreatmentVouchers'
+        ref: 'ItemVouchers'
     },
     date: {
         type: Date
     },
-    repay: [{
-        repayId: {
-            type: mongoose.Schema.ObjectId,
-            ref:"Repaies"
-        }
-    }],
     balance: {
         type: Number
     },

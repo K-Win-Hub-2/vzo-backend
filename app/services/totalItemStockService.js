@@ -21,21 +21,19 @@ exports.getAllStockIncludingRepackage = async (datas) => {
             code: item.code,
             fromUnit: item.fromUnit,
             toUnit: item.toUnit,
-            currentQuantity: item.currentQuantity,
-            totalUnit: item.totalUnit,
             sellingPrice: item.sellingPrice,
             purchasePrice: item.purchasePrice,
             deliveryPrice: item.deliveryPrice,
             totalPurchase: item.totalPurchase,
         }
         result[item._id]["item"] = item
-        result[item._id]["total"]["totalUnit"] += result[item._id]["item"].totalUnit
+        result[item._id]["total"]["totalUnit"] = result[item._id]["item"].totalUnit
         result[item._id]["total"].currentQuantity = Math.ceil((result[item._id]["total"].totalUnit * result[item._id]["total"].fromUnit) / result[item._id]["total"].toUnit) 
         result[item._id]["package"] = []
         queryRepackage.map(pk=>{           
             pk.itemArray.map(pkItem=>{
                 if(pkItem.item_id._id.toString()===item._id.toString()){
-                    result[item._id]["total"].totalUnit += pkItem.totalQuantity
+                    result[item._id]["total"].totalUnit += ( pkItem.totalQuantity * queryRepackage.currentQuantity )
                     result[item._id]["total"].currentQuantity = Math.ceil((result[item._id]["total"].totalUnit * result[item._id]["total"].fromUnit) / result[item._id]["total"].toUnit) 
                     result[item._id]["package"].push(pk)
                 }
