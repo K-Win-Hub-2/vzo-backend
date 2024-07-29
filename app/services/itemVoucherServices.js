@@ -22,7 +22,7 @@ exports.createItemVoucher = async (datas) => {
        if(datas.balance) await createDebt({
               relatedItemVoucher: result._id,
               date: datas.createdAt,
-              balance: balance,
+              balance: datas.balance,
               isPaid:false
        })
        return result; 

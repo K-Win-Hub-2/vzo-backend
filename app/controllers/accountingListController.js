@@ -19,7 +19,7 @@ exports.listAllAccountingLists = async (req, res) => {
         count = await AccountingList.find(query).count();
         const division = count / limit;
         page = Math.ceil(division);
-
+        console.log("result is ",result)
         res.status(200).send({
             success: true,
             count: count,
