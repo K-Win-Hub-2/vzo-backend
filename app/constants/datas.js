@@ -4,7 +4,7 @@ const { deleteItem, getItemById, updateItem, createItems, getAllItems } = requir
 const { getAllItemTitles, createItemTitle, updateTitleItem, getItemTitleById, deleteTitleItem } = require("../services/itemTitleService");
 const { deleteItemVoucher, getItemVoucherById, updateItemVoucher, createItemVoucher, getAllItemVoucher } = require("../services/itemVoucherServices");
 const { getAllSuperCategories, createSuperCategories, updateCategories, getCategoriesById, deleteSuperCategories } = require("../services/superCategoryService");
-const { getAllStockIncludingRepackage } = require("../services/totalItemStockService");
+const { getAllStockIncludingRepackage, getSaleItemsAndPackage } = require("../services/totalItemStockService");
 
 exports.ServiceDatas = {
     "super-category": {
@@ -58,5 +58,8 @@ exports.ServiceDatas = {
         update: updateItemVoucher,
         listById: getItemVoucherById,
         delete: deleteItemVoucher
+    },
+    "sale-stock-and-package": {
+        list: getSaleItemsAndPackage
     }
 }

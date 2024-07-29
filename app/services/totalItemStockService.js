@@ -48,41 +48,40 @@ exports.getAllStockIncludingRepackage = async (datas) => {
     
 }
 
-// exports.createSuperCategories = async (datas) => {
-//     try{
-//        let result = await superCategory.create(datas)
-//        return result; 
-//     }
-//     catch(err){
-//         console.log("Error is", err.message)
-//     }
-// }
+exports.getSaleItemsAndPackage = async (datas) => {
+    let query =  { isDeleted: false }
+    let { s } = datas
+    let data = []
+    s ? query.relatedSuperCategory = s : ""
+    let queryItems = await items.find(query).populate("relatedSuperCategory relatedItemTitle").exec()
+    let queryRepackage = await itemPackage.find({isDeleted: false}).populate({path: "itemArray",populate: {path: "item_id"}}).exec()
 
-// exports.getCategoriesById = async (id) => {
-//     try{
-//        let result = await superCategory.findById(id)
-//         return result; 
-//     }catch(err){
-//         console.log("Error is", err.message)
-//     }
+    queryItems.map(items => {
+        //push item to data
+        data.push({
+            _id: items._id,
+            name: items.name,
+            code: items.code,
+            sellingPrice: items.sellingPrice,
+            purchasePrice: items.purchasePrice,
+            deliveryPrice: items.deliveryPrice,
+            currentQuantity: items.currentQuantity,
+            type: "item"
+        })
+        queryRepackage.map(pk=>{
+            const arr = pk.itemArray
+            arr.map(item=> item.item_id.equals(items._id) ? data.push({
+                _id: pk._id,
+                name: pk.name,
+                code: pk.code,
+                sellingPrice: pk.sellingPrice,
+                purchasePrice: pk.purchasePrice,
+                deliveryPrice: pk.deliveryPrice,
+                currentQuantity: pk.currentQuantity,
+                type: "package"
+            }): "")
+        })
+    })
     
-// }
-
-// exports.updateCategories = async (id, datas) => {
-//     try{
-//        let result = await superCategory.findByIdAndUpdate(id, datas, { new: true })
-//        return result; 
-//     }catch(err){
-//         console.log("Error is", err.message)
-//     }
-// }
-
-// exports.deleteSuperCategories = async (id) => {
-//     try{
-//        let result = await superCategory.findByIdAndUpdate(id, {isDeleted: true}, { new: true })
-//        return result; 
-//     }catch(err){
-//         console.log("Error is", err.message)
-//     }
-// }
-
+    return data
+}     
