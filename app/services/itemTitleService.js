@@ -5,7 +5,7 @@ const itemTitle = require("../models/itemTitle")
 
 exports.getAllItemTitles = async (datas) => {
     try{
-       let { s, b, sc, bc, limit, offset } = datas
+       let { s, b, sc, bc, limit, offset, sort } = datas
        let query = { isDeleted: false }
        let sortByAscending = {id: 1}
        s ? query.relatedCategory = s : ""

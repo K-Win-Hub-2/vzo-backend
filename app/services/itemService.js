@@ -5,7 +5,7 @@ const items = require("../models/items")
 
 exports.getAllItems = async (datas) => {
     try{
-       let { s, c, limit, offset } = datas
+       let { s, c, limit, offset, sort } = datas
        let query = { isDeleted: false }
        let sortByAscending = {id: 1}
        s ? query.relatedSuperCategory = s : ""

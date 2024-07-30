@@ -6,7 +6,7 @@ const itemsPackage = require("../models/itemPackage")
 const items = require("../models/items")
 
 exports.getAllItemPackage = async (datas) => {
-       let { i, c, limit, offset} = datas
+       let { i, c, limit, offset, sort} = datas
        let query = { isDeleted: false }
        let sortByAscending = {id: 1}
        i ? query.relatedItem = i : ""

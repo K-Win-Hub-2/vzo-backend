@@ -6,7 +6,7 @@ const damageItem = require("../models/damageItem")
 
 exports.getAllDamageItems = async (datas) => {
     try{
-       let { type, limit, offset } = datas
+       let { type, limit, offset, sort } = datas
        let sortByAscending = {id: 1}
        let query = { isDeleted: false }
        type ? query.type = type  : ""
