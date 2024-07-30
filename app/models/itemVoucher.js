@@ -65,7 +65,7 @@ let ItemVoucherSchema = new Schema({
      },
     paymentMethod: {
         type: String,
-        enum: ['Paid', 'Partial', 'FOC']
+        enum: ['Amount', 'Percent', 'FOC']
     },
     relatedItem: [{
         item_id: {
@@ -100,6 +100,10 @@ let ItemVoucherSchema = new Schema({
         type: String,
         enum: ['Bank', 'Cash']
     },
+    secondPaymentType: {
+        type: String,
+        enum: ['Bank', 'Cash']
+    },
     seq: {
         type: Number
     },
@@ -121,7 +125,8 @@ let ItemVoucherSchema = new Schema({
         type: Number
     },
     balance: {
-        type: Number
+        type: Number,
+        default: 0
     },
     totalPaidAmount: {
         type: Number,

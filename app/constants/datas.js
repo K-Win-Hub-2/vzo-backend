@@ -5,6 +5,7 @@ const { getAllItemTitles, createItemTitle, updateTitleItem, getItemTitleById, de
 const { deleteItemVoucher, getItemVoucherById, updateItemVoucher, createItemVoucher, getAllItemVoucher } = require("../services/itemVoucherServices");
 const { getAllSuperCategories, createSuperCategories, updateCategories, getCategoriesById, deleteSuperCategories } = require("../services/superCategoryService");
 const { getAllStockIncludingRepackage, getSaleItemsAndPackage } = require("../services/totalItemStockService");
+const { voucherTotalCalculationService } = require("../services/voucherTotalCalculationService");
 
 exports.ServiceDatas = {
     "super-category": {
@@ -61,5 +62,8 @@ exports.ServiceDatas = {
     },
     "sale-stock-and-package": {
         list: getSaleItemsAndPackage
+    },
+    "voucher-calculation": {
+        list: voucherTotalCalculationService
     }
 }

@@ -13,6 +13,7 @@ let AccountBalance = new Schema({
     },
     type: {
         type: String,
+        default: "Closing",
         enum: ['Opening', 'Closing']
     },
     amount: {

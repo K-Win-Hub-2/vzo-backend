@@ -6,7 +6,7 @@ exports.listAllData = async (req,res) => {
     const paths = req.path.split("/v1/")[1]
     console.log("req",paths, registerServiceHelper.getMethods(paths))
     let datas = await registerServiceHelper.getMethods(paths)[0][paths].list(req.query)
-    res.status(200).send({success: true, message: "Get All Datas", data: datas})
+    res.status(200).send({success: true, message: "Get All Datas", data: datas.data, meta_data: datas.meta_data})
 }
 
 exports.createData = async (req,res) => {

@@ -16,4 +16,8 @@ module.exports = (app) => {
         .get(catchError(dataById)) 
         .put(catchError(updateDataById))
         .delete(catchError(deleteDataById))
+
+    app.route('/api/v1/voucher-calculation')
+        .get(listAllData)
+    
 };
