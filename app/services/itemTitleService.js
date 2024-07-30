@@ -1,17 +1,22 @@
 "use strict"
 
+const { paginationHelper } = require("../helper/paginationHelper")
 const itemTitle = require("../models/itemTitle")
 
 exports.getAllItemTitles = async (datas) => {
     try{
-       let { s, b, sc, bc} = datas
+       let { s, b, sc, bc, limit, offset } = datas
        let query = { isDeleted: false }
+       let sortByAscending = {id: 1}
        s ? query.relatedCategory = s : ""
        b ? query.relatedBrand= b : ""
        sc ? query.relatedSubCategory = sc : ""
        bc? query.relatedBranch = bc : ""
-       let result = await itemTitle.find(query).populate("relatedCategory relatedBrand relatedSubCategory relatedBranch")
-        return result; 
+       if (sort) sortByAscending = { id: -1 }
+       let count = await itemTitle.find(query).count()
+       let paginationHelpers = await paginationHelper(count, offset, limit) 
+       let result = await itemTitle.find(query).populate("relatedCategory relatedBrand relatedSubCategory relatedBranch").limit(paginationHelpers.limit).skip(paginationHelpers.skip).sort(sortByAscending).exec()
+       return { data: result, meta_data: paginationHelpers}; 
     }catch(err){
         console.log("Error is", err.message)
     }

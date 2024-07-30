@@ -6,7 +6,7 @@ exports.getAllSuperCategories = async (datas) => {
     try{
        let query = { isDeleted: false }
        let result = await superCategory.find(query)
-        return result; 
+        return {data: result}; 
     }catch(err){
         console.log("Error is", err.message)
     }

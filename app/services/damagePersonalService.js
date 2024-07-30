@@ -1,15 +1,20 @@
 "use strict"
 
 const { subtractPackage, substractItemsifPackageAvailable, checkItemsAndReturn, checkPackageAndReturn } = require("../helper/checkItems")
+const { paginationHelper } = require("../helper/paginationHelper")
 const damageItem = require("../models/damageItem")
 
 exports.getAllDamageItems = async (datas) => {
     try{
-       let { type } = datas
+       let { type, limit, offset } = datas
+       let sortByAscending = {id: 1}
        let query = { isDeleted: false }
        type ? query.type = type  : ""
-       let result = await damageItem.find(query)
-        return result; 
+       if (sort) sortByAscending = { id: -1 }
+       let count = await damageItem.find(query).count()
+       let paginationHelpers = await paginationHelper(count, offset, limit) 
+       let result = await damageItem.find(query).limit(paginationHelpers.limit).skip(paginationHelpers.skip).sort(sortByAscending).exec()
+        return { data: result, meta_data: paginationHelpers}; 
     }catch(err){
         console.log("Error is", err.message)
     }

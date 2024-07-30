@@ -1,16 +1,21 @@
 "use strict"
 
 const { substractItemsifPackageAvailable, substractItemsArrayifPackageAvailable } = require("../helper/checkItems")
+const { paginationHelper } = require("../helper/paginationHelper")
 const itemsPackage = require("../models/itemPackage")
 const items = require("../models/items")
 
 exports.getAllItemPackage = async (datas) => {
-       let { i, c} = datas
+       let { i, c, limit, offset} = datas
        let query = { isDeleted: false }
+       let sortByAscending = {id: 1}
        i ? query.relatedItem = i : ""
        c ? query.code= c : ""
-       let result = await itemsPackage.find(query).populate("relatedItem").populate({path: "itemArray", populate:{path: "item_id"}})
-        return result
+       if (sort) sortByAscending = { id: -1 }
+       let count = await itemsPackage.find(query).count()
+       let paginationHelpers = await paginationHelper(count, offset, limit) 
+       let result = await itemsPackage.find(query).populate("relatedItem").populate({path: "itemArray", populate:{path: "item_id"}}).limit(paginationHelpers.limit).skip(paginationHelpers.skip).sort(sortByAscending).exec()
+        return { data: result, meta_data: paginationHelpers}; 
 }
 
 exports.createitemsPackage = async (datas) => {

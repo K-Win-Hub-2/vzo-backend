@@ -41,7 +41,7 @@ exports.getAllStockIncludingRepackage = async (datas) => {
         })
        })
        const data = Object.values(result)
-       return data
+       return { data: data }
     }catch(err){
         console.log("Error is", err.message)
     }
@@ -83,5 +83,5 @@ exports.getSaleItemsAndPackage = async (datas) => {
         })
     })
     
-    return data
+    return { data: data }
 }     
