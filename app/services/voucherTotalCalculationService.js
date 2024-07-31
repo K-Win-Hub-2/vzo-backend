@@ -6,6 +6,8 @@ exports.voucherTotalCalculationService = async (data) => {
         const treatmentVoucher = await getAllItemVoucher(data)
         let bankObject = {}
         let cashObject = {}
+        let bankTotal = 0
+        let cashTotal = 0
         let total = 0
         const datas = treatmentVoucher.data
         let bankList = datas.filter(dat => dat.relatedBank)
@@ -25,8 +27,14 @@ exports.voucherTotalCalculationService = async (data) => {
                 cashObject[second.secondAccount.name] = (cashObject[second.secondAccount.name] || 0) + ( second.secondAmount || 0 )
             }
         })
-       Object.entries(bankObject).map(([k, v]) => total += v)
-       Object.entries(cashObject).map(([k, v]) => total += v)
-       let result = {bank: bankObject,cash: cashObject,total: total}
+       Object.entries(bankObject).map(([k, v]) => { 
+        total += v
+        bankTotal += v
+       })
+       Object.entries(cashObject).map(([k, v]) => { 
+        total += v
+        cashTotal += v
+       })
+       let result = { bank: bankObject,cash: cashObject, bankTotal: bankTotal, cashTotal: cashTotal, total: total }
        return { data: result }
 }

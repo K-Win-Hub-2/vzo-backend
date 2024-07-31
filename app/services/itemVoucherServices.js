@@ -4,9 +4,12 @@ const { paginationHelper } = require("../helper/paginationHelper")
 const {generateVoucherCode} = require("../helper/voucherCodeGeneratorHelper")
 const itemVoucher = require("../models/itemVoucher")
 const {createDebt} = require("./debtService")
+const moment = require("moment-timezone")
 
 exports.getAllItemVoucher = async (datas) => {
     let {
+        bank,
+        cash,
         secondAccount,
         isDouble,
         secondAmount,
@@ -26,6 +29,7 @@ exports.getAllItemVoucher = async (datas) => {
         createdBy,
         balance,
         tsType,
+        exact,
         limit,
         offset,
         sort
@@ -34,18 +38,27 @@ exports.getAllItemVoucher = async (datas) => {
     let query = {
         isDeleted: false
     }
-    if (startDate && endDate) 
+    if (startDate && endDate){
         query.createdAt = {
-            $gte: new Date(startDate),
-            $lte: new Date(endDate)
+            $gte: moment.tz(startDate, "Asia/Yangon").startOf("day").format(),
+            $lte: moment.tz(endDate, "Asia/Yangon").startOf("day").format()
         }
-    
+    } 
+    if(exact) {
+        query.createdAt = {
+            $gte: moment.tz(startDate, "Asia/Yangon").startOf("day").format(),
+            $lt: moment.tz(endDate, "Asia/Yangon").startOf("day").format()
+        }
+    }  
     if (refund) 
         query.refund = refund
-    
+
+    if(!refundType)
+        query.refund = false    
+
     if (refundType) 
         query.refundType = refundType
-    
+
     if (refundDate) 
         query.refundDate = {
             $gte: new Date(refundDate)
@@ -96,6 +109,13 @@ exports.getAllItemVoucher = async (datas) => {
         query.secondAmount = {
             $gte: secondAmount
         }
+    
+    if (bank)
+        query.relatedBank = { $exists: true}
+
+    if (cash)
+        query.relatedCash = { $exists: true }
+
     if (sort) sortByAscending = { id: -1 }
     let count = await itemVoucher.find(query).count()
     let paginationHelpers = await paginationHelper(count, offset, limit) 

@@ -1,3 +1,4 @@
+const { calculateTotalIncome } = require("../services/calculateTotalIncome");
 const { getAllDamageItems, createDamageItems, updateDamageItem, getDamageItemById, deleteDamageItem } = require("../services/damagePersonalService");
 const { getAllItemPackage, createitemsPackage, updateItemPackage, getItemPackageById, deleteItemPackage } = require("../services/itemPackageService");
 const { deleteItem, getItemById, updateItem, createItems, getAllItems } = require("../services/itemService");
@@ -65,5 +66,8 @@ exports.ServiceDatas = {
     },
     "voucher-calculation": {
         list: voucherTotalCalculationService
+    },
+    "total-account-reports": {
+        list: calculateTotalIncome
     }
 }

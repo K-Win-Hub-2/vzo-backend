@@ -20,4 +20,7 @@ module.exports = (app) => {
     app.route('/api/v1/voucher-calculation')
         .get(listAllData)
     
+    app.route('/api/v1/total-account-reports')
+        .get(listAllData)
+    
 };
