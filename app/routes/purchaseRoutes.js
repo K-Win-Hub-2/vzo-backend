@@ -7,7 +7,7 @@ const verifyToken = require('../lib/verifyToken');
 module.exports = (app) => {
 
     app.route('/api/purchase')
-        .post(catchError(purchase.createPurchase))
+        .post(verifyToken, catchError(purchase.createPurchase))
         .put(verifyToken, catchError(purchase.updatePurchase))
         
     app.route("/api/purchase-history")
@@ -19,4 +19,6 @@ module.exports = (app) => {
         .post(verifyToken, catchError(purchase.activatePurchase))
 
     app.route('/api/purchases').get(verifyToken, catchError(purchase.listAllPurchases))
+
+    app.route('/api/purchase-items/add/:id').get(verifyToken, catchError(purchase.activateAndAddItemIfConfirmed))
 };

@@ -6,6 +6,10 @@ const Schema = mongoose.Schema;
 
 
 let PurchaseSchema = new Schema({
+    confirmPurchase: {
+        type: Boolean,
+        default: false,
+    },
     purchaseDate: {
         type: Date,
     },
@@ -16,6 +20,15 @@ let PurchaseSchema = new Schema({
     remark: {
         type: String,
     },
+    items: [{
+        item_id: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Items'
+        },
+        qty: Number,
+        price: Number,
+        subTotal: Number
+    }],
     medicineItems: [{
         item_id: {
             type: mongoose.Schema.Types.ObjectId,

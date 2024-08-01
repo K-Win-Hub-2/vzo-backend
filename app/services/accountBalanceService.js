@@ -1,6 +1,7 @@
 "use strict"
 
 const AccountBalance = require("../models/accountBalance") 
+const moment = require("moment-timezone")
 
 exports.listAllAccountBalance = async (datas) => {
     let { exact, startDate, endDate, relatedBranch, relatedAccounting } = datas
@@ -8,11 +9,18 @@ exports.listAllAccountBalance = async (datas) => {
     if (startDate && endDate) query.date = { $gte: new Date(startDate), $lte: new Date(endDate) }
     if (relatedBranch) query.relatedBranch = relatedBranch
     if (relatedAccounting) query.relatedAccounting = relatedAccounting
-    if(exact){
-        const startDate = new Date(exact)
-        const endDate = new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDay() + 1, startDate.getHours(), startDate.getMinutes(), startDate.getSeconds())
-        query.date = { $gte: new Date(startDate), $lt: new Date(endDate) }
-    }
+    if (startDate && endDate){
+        query.date = {
+            $gte: moment.tz(startDate, "Asia/Yangon").startOf("day").format(),
+            $lte: moment.tz(endDate, "Asia/Yangon").startOf("day").format()
+        }
+    } 
+    if(exact) {
+        query.date = {
+            $gte: moment.tz(startDate, "Asia/Yangon").startOf("day").format(),
+            $lt: moment.tz(endDate, "Asia/Yangon").startOf("day").format()
+        }
+    } 
     const accountBalances = await AccountBalance.find(query).populate('relatedBranch relatedAccounting')
     return {
         data: accountBalances

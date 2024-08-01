@@ -9,22 +9,24 @@ const medicineItem = require('../models/medicineItem');
 const { ObjectId } = require('mongodb');
 const procedureItem = require('../models/procedureItem');
 const accessoryItem = require('../models/accessoryItem');
+const { addItemsArrayifPurchase } = require('../helper/checkItems');
 
 exports.listAllPurchases = async (req, res) => {
-    let { keyword, role, limit, skip } = req.query;
+    let { keyword, role, limit, skip, confirmPurchase } = req.query;
     let count = 0;
     let page = 0;
     try {
         limit = +limit <= 100 ? +limit : 10; //limit
         skip = +skip || 0;
-        let query = { isDeleted: false },
+        let query = { isDeleted: false, confirmPurchase: false },
             regexKeyword;
         role ? (query['role'] = role.toUpperCase()) : '';
         keyword && /\w/.test(keyword)
             ? (regexKeyword = new RegExp(keyword, 'i'))
             : '';
         regexKeyword ? (query['name'] = regexKeyword) : '';
-        let result = await Purchase.find(query).populate('supplierName').populate('medicineItems.item_id').populate('procedureItems.item_id').populate('relatedBranch')
+        confirmPurchase ? query["confirmPurchase"] = confirmPurchase : ""
+        let result = await Purchase.find(query).populate("items.item_id").populate('supplierName').populate('medicineItems.item_id').populate('procedureItems.item_id').populate('relatedBranch')
         count = await Purchase.find(query).count();
         const division = count / limit;
         page = Math.ceil(division);
@@ -54,104 +56,10 @@ exports.getPurchase = async (req, res) => {
 
 exports.createPurchase = async (req, res, next) => {
     let data = req.body
-    let { relatedBranch, relatedPurchaseAccount, purchaseDate } = data
     try {
-        data.medicineItems.map(async function (element, index) {
-            const totalPrice= element.qty * element.purchasePrice
-            const result = await MedicineItems.findOneAndUpdate(
-                { _id: element.item_id },
-                { $push:{ purchaseHistory: {currentQuantity: element.qty, totalUnit: element.totalUnit, purchaseDate: purchaseDate, name: element.name, purchasePrice: element.purchasePrice, sellingPrice: element.sellingPrice, totalPrice: totalPrice, unit: element.unit, expireDate: element.expiredDate}},
-                  purchasePrice: element.purchasePrice, sellingPrice: element.sellingPrice,
-                  $inc: { currentQuantity: element.qty, totalUnit: element.totalUnit, purchaseQty: element.qty, closingQty: element.qty } },
-                { new: true },
-            )
-        })
-        data.procedureItems.map(async function (element, index) {
-            const totalPrice= element.qty * element.purchasePrice
-            const result = await ProcedureItems.findOneAndUpdate(
-                { _id: element.item_id },
-                {   $push:{ purchaseHistory: {currentQuantity: element.qty, totalUnit: element.totalUnit, purchaseDate: purchaseDate, name: element.name, purchasePrice: element.purchasePrice, sellingPrice: element.sellingPrice, totalPrice: totalPrice, unit: element.unit, expireDate: element.expiredDate}},
-                    purchasePrice: element.purchasePrice, sellingPrice: element.sellingPrice,
-                    $inc: { currentQuantity: element.qty, totalUnit: element.totalUnit, purchaseQty: element.qty, closingQty: element.qty } },
-                { new: true },
-            )
-        })
-        data.accessoryItems.map(async function (element, index) {
-            const totalPrice= element.qty * element.purchasePrice
-            const result = await AccessoryItems.findOneAndUpdate(
-                { _id: element.item_id },
-                { 
-                    $push:{ purchaseHistory: {currentQuantity: element.qty, totalUnit: element.totalUnit, purchaseDate: purchaseDate, name: element.name, purchasePrice: element.purchasePrice, sellingPrice: element.sellingPrice, totalPrice: totalPrice, unit: element.unit, expireDate: element.expiredDate}},
-                    purchasePrice: element.purchasePrice, sellingPrice: element.sellingPrice,
-                    $inc: { currentQuantity: element.qty, totalUnit: element.totalUnit, purchaseQty: element.qty, closingQty: element.qty } },
-                { new: true },
-            )
-        })
-        data = { ...data, relatedBranch: relatedBranch }
-        const newPurchase = new Purchase(data);
-        const result = await newPurchase.save();
-
-        const transResult = await Transaction.create({
-            "amount": data.totalPrice,
-            "date": Date.now(),
-            "remark": data.remark,
-            "type": "Debit",
-            "relatedTransaction": null,
-            "relatedAccounting": "64ae1fd412b3d31436d48059", //Opening Inventory
-        })
-        const transResultAmtUpdate = await Accounting.findOneAndUpdate(
-            { _id: '64ae1fd412b3d31436d48059' },
-            { $inc: { amount: data.totalPrice } }
-        )
-
-        //64ae1fea12b3d31436d4805f Purchase
-        const purchaseResult = await Transaction.create({
-            "amount": data.totalPrice,
-            "date": Date.now(),
-            "remark": data.remark,
-            "type": "Debit",
-            "relatedTransaction": null,
-            "relatedAccounting": relatedPurchaseAccount, //Purchase
-        })
-        const purchaseAMTUpdate = await Accounting.findOneAndUpdate(
-            { _id: relatedPurchaseAccount },
-            { $inc: { amount: data.totalPrice } }
-        )
-        const SectransResult = await Transaction.create({
-            "amount": data.totalPrice,
-            "date": Date.now(),
-            "remark": data.remark,
-            "type": "Credit",
-            "relatedTransaction": null,
-            "relatedBank": req.body.relatedBank, //Bank or cashk
-            "relatedCash": req.body.relatedCash,
-            "relatedTransaction": transResult._id
-        })
-        var fTransUpdate = await Transaction.findOneAndUpdate(
-            { _id: transResult._id },
-            {
-                relatedTransaction: SectransResult._id
-            },
-            { new: true }
-        )
-        if (req.body.relatedBank) {
-            var amountUpdate = await Accounting.findOneAndUpdate(
-                { _id: req.body.relatedBank },
-                { $inc: { amount: -req.body.totalPrice } }
-            )
-        } else if (req.body.relatedCash) {
-            var amountUpdate = await Accounting.findOneAndUpdate(
-                { _id: req.body.relatedCash },
-                { $inc: { amount: -req.body.totalPrice } }
-            )
-        }
-        const transUpdate = await Transaction.findOneAndUpdate({ _id: transResult._id }, { "relatedTransaction": SectransResult._id })
-        res.status(200).send({
-            message: 'Purchase create success',
-            success: true,
-            data: result,
-            transResult: transResult
-        });
+        const result = await Purchase.create(data)
+        addItemsArrayifPurchase(data.items)
+        return res.status(200).send({ success: true, message: 'Purchase created successfully',  data: result });
     } catch (error) {
         return res.status(500).send({ "error": true, message: error.message })
     }
@@ -336,6 +244,20 @@ exports.activatePurchase = async (req, res, next) => {
             { new: true },
         );
         return res.status(200).send({ success: true, data: { isDeleted: result.isDeleted } });
+    } catch (error) {
+        return res.status(500).send({ "error": true, "message": error.message })
+    }
+};
+
+exports.activateAndAddItemIfConfirmed = async (req, res, next) => {
+    try {
+        const result = await Purchase.findOne(
+            { _id: req.params.id }
+        );
+        addItemsArrayifPurchase(result.items)
+        result.confirmPurchase = true
+        await result.save()
+        return res.status(200).send({ success: true, data: result });
     } catch (error) {
         return res.status(500).send({ "error": true, "message": error.message })
     }
