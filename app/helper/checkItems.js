@@ -183,3 +183,18 @@ exports.addItemsArrayifPurchase = (itemArray) => {
     }
 }
 
+//if current quantity
+exports.addCurrentQuantityPackageArray = (itemArray) => {
+    try{
+        for(let i=0; i<itemArray.length; i++){
+            itemPackage.findOne({_id:itemArray[i].item_id}).then(function(item){
+                item.currentQuantity += itemArray[i].qty
+                item.totalUnit = Math.ceil(item.currentQuantity * item.toUnit/ item.fromUnit)
+                item.purchasePrice = itemArray[i].price
+                item.save()
+            })
+        }
+    }catch(e){
+        console.log("Error is ", e.message)
+    }
+}

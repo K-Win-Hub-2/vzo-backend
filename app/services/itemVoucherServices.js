@@ -1,5 +1,5 @@
 "use strict" 
-const {substractCurrentQuantityOfItem, substractCurrentQuantityOfItemPackageArray} = require("../helper/checkItems")
+const {substractCurrentQuantityOfItem, substractCurrentQuantityOfItemPackageArray, addItemsArrayifPurchase, addCurrentQuantityPackageArray} = require("../helper/checkItems")
 const { paginationHelper } = require("../helper/paginationHelper")
 const {generateVoucherCode} = require("../helper/voucherCodeGeneratorHelper")
 const itemVoucher = require("../models/itemVoucher")
@@ -50,7 +50,6 @@ exports.getAllItemVoucher = async (datas) => {
             $lt: moment.tz(endDate, "Asia/Yangon").startOf("day").format()
         }
     }  
-    
     if (refund) 
         query.refund = refund
 
@@ -144,6 +143,20 @@ exports.getItemVoucherById = async (id) => {
 }
 
 exports.updateItemVoucher = async (id, datas) => {
+    let itemVoucher = await this.getItemVoucherById(id)
+    const relatedPackage = itemVoucher.relatedPackage
+    const relatedItem = itemVoucher.relatedItem
+    if (datas.relatedItem.length > 0) {
+        await substractCurrentQuantityOfItem(relatedItem)
+        await addItemsArrayifPurchase(datas.relatedItem)
+        await itemVoucher.findByIdAndUpdate(id, { $unset: {relatedItem: ""}})
+    }
+    if (datas.relatedPackage.length > 0) {
+        await substractCurrentQuantityOfItemPackageArray(relatedPackage)
+        await addCurrentQuantityPackageArray(datas.relatedPackage)
+        await itemVoucher.findByIdAndUpdate(id, { $unset: {relatedPackage: ""}})
+    }
+
     let result = await itemVoucher.findByIdAndUpdate(id, datas, {new: true})
     return result
 }
