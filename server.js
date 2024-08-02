@@ -53,15 +53,18 @@ mongoose.plugin((schema) => {
 
 app.use('/static', express.static(path.join(__dirname, 'uploads')));
 
-app.all("*", function(req, res, next){
-  const error = {}
-  error.status = 404
-  error.success = false
-  error.message = `Can't find ${req.url} on the server`
-  res.status(error.status).send(error)
-})
 
 require('./config/express')(app, config);
+
+app.all('*', (req, res) => {
+  const error = {
+    status: 404,
+    success: false,
+    message: `Can't find ${req.url} on the server`,
+  };
+  res.status(error.status).send(error);
+});
+
 
 server.listen(port, () => {
   console.log('We are live on port:', port);
