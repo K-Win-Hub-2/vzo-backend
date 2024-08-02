@@ -42,13 +42,13 @@ exports.calculateTotalIncome = async (datas) => {
         })
     }
     //list all other income with exact date
-    // let todayIncome = await listAllHoIncome(datas)
-    // //if income exists
-    // if(todayIncome.data.length > 0) {
-    //     todayIncome.data.map(exp=> {
-    //         data.otherIncome = data.otherIncome + exp.finalAmount
-    //     })
-    // }
+    let todayIncome = await listAllHoIncome(datas)
+    //if income exists
+    if(todayIncome.data.length > 0) {
+        todayIncome.data.map(exp=> {
+            data.otherIncome = data.otherIncome + exp.finalAmount
+        })
+    }
     data.closingBalance = (data.openingBalance + data.todayVoucherIncome + data.otherIncome) - ( data.expense + data.transferBalance )
     return {
         data: data

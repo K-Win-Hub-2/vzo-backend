@@ -21,7 +21,7 @@ exports.listAllAccountBalance = async (datas) => {
             $lt: moment.tz(endDate, "Asia/Yangon").startOf("day").format()
         }
     } 
-    const accountBalances = await AccountBalance.find(query).populate('relatedBranch relatedAccounting')
+    const accountBalances = await AccountBalance.find(query).populate('relatedAccounting')
     return {
         data: accountBalances
     }
