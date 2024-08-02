@@ -24,6 +24,6 @@ exports.listAllHoIncome = async (datas) => {
             $lt: moment.tz(endDate, "Asia/Yangon").startOf("day").format()
         }
     } 
-    const result = await hoIncome.find(query).populate('relatedBranch').populate('relatedAccounting').populate('relatedBankAccount').populate('relatedCashAccount').exec()
+    const result = await hoIncome.find(query).populate('relatedAccounting').populate('relatedBankAccount').populate('relatedCashAccount').exec()
     return { data: result }
 }
