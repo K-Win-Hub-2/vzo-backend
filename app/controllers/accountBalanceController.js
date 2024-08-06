@@ -6,6 +6,8 @@ const Income = require('../models/income');
 const TreatmentVoucher = require('../models/treatmentVoucher');
 const AccountingList = require('../models/accountingList');
 const Transfer = require('../models/transfer');
+const { startDateEndDateHelper } = require('../helper/dateHelper');
+const moment = require("moment-timezone")
 
 exports.listAllAccountBalances = async (req, res) => {
     let { keyword, role, limit, skip } = req.query;
@@ -54,14 +56,30 @@ exports.getAccountBalance = async (req, res) => {
 exports.createAccountBalance = async (req, res, next) => {
     let newBody = req.body;
     try {
-        const { amount } = req.body;
-        const newAccountBalance = new AccountBalance(newBody);
-        const result = await newAccountBalance.save();
-        res.status(200).send({
-            message: 'AccountBalance create success',
-            success: true,
-            data: result
+        const { amount, date } = req.body;
+        const dateHelper = startDateEndDateHelper({exact: date, value: "add"})
+        let query = { isDeleted: false, date: {
+            $gte: moment.tz(dateHelper.startDate, "Asia/Yangon").startOf("day").format(),
+            $lt: moment.tz(dateHelper.endDate, "Asia/Yangon").startOf("day").format()
+        }}
+        const findAccountBalance = await AccountBalance.find(query).exec()
+        if(findAccountBalance.length > 0){
+            const result = await AccountBalance.findByIdAndUpdate(findAccountBalance[0]._id, req.body, {new: true})
+            res.status(200).send({
+                message: 'AccountBalance updated successfully',
+                success: true,
+                data: result
         });
+        }else{
+            const newAccountBalance = new AccountBalance(newBody);
+            const result = await newAccountBalance.save();
+            res.status(200).send({
+                message: 'AccountBalance create success',
+                success: true,
+                data: result
+        });
+        }
+        
     } catch (error) {
         // console.log(error )
         return res.status(500).send({ "error": true, message: error.message })

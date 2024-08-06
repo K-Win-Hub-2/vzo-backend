@@ -53,54 +53,55 @@ exports.getTransfer = async (req, res) => {
 exports.createTransfer = async (req, res, next) => {
   const newBody = req.body;
   try {
+    
     const newTransfer = new Transfer(req.body);
     const result = await newTransfer.save();
-    const fromAccUpdate = await AccList.findOneAndUpdate(
-      { _id: req.body.fromAcc },
-      { $inc: { amount: -req.body.amount } },
-      { new: true },
-    );
-    const toAccUpdate = await AccList.findOneAndUpdate(
-      { _id: req.body.toAcc },
-      { $inc: { amount: req.body.amount } },
-      { new: true },
-    );
-    const firstTransaction =
-    {
-      "amount": newBody.amount,
-      "date": newBody.date,
-      "remark": newBody.remark,
-      "type": "Credit",
-      "relatedTransaction": null,
-      "relatedAccounting": newBody.fromAcc
-    }
-    const fTransaction = new Transaction(firstTransaction)
-    const fTransResult = await fTransaction.save();
-    const secondTransaction = {
-      "amount": newBody.amount,
-      "date": newBody.date,
-      "remark": newBody.remark,
-      "type": "Debit",
-      "relatedTransaction": fTransResult._id,
-      "relatedAccounting": newBody.toAcc,
-    }
-    const secTrans = new Transaction(secondTransaction)
-    var secTransResult = await secTrans.save();
-    var fTransUpdate = await Transaction.findOneAndUpdate(
-      { _id: fTransResult._id },
-      {
-        relatedTransaction: secTransResult._id
-      },
-      { new: true }
-    )
+    // const fromAccUpdate = await AccList.findOneAndUpdate(
+    //   { _id: req.body.fromAcc },
+    //   { $inc: { amount: -req.body.amount } },
+    //   { new: true },
+    // );
+    // const toAccUpdate = await AccList.findOneAndUpdate(
+    //   { _id: req.body.toAcc },
+    //   { $inc: { amount: req.body.amount } },
+    //   { new: true },
+    // );
+    // const firstTransaction =
+    // {
+    //   "amount": newBody.amount,
+    //   "date": newBody.date,
+    //   "remark": newBody.remark,
+    //   "type": "Credit",
+    //   "relatedTransaction": null,
+    //   "relatedAccounting": newBody.fromAcc
+    // }
+    // const fTransaction = new Transaction(firstTransaction)
+    // const fTransResult = await fTransaction.save();
+    // const secondTransaction = {
+    //   "amount": newBody.amount,
+    //   "date": newBody.date,
+    //   "remark": newBody.remark,
+    //   "type": "Debit",
+    //   "relatedTransaction": fTransResult._id,
+    //   "relatedAccounting": newBody.toAcc,
+    // }
+    // const secTrans = new Transaction(secondTransaction)
+    // var secTransResult = await secTrans.save();
+    // var fTransUpdate = await Transaction.findOneAndUpdate(
+    //   { _id: fTransResult._id },
+    //   {
+    //     relatedTransaction: secTransResult._id
+    //   },
+    //   { new: true }
+    // )
     res.status(200).send({
       message: 'Transfer create success',
       success: true,
       data: result,
-      ftrans: fTransUpdate,
-      sTrans: secTransResult,
-      fAcc: fromAccUpdate,
-      tAcc: toAccUpdate
+      // ftrans: fTransUpdate,
+      // sTrans: secTransResult,
+      // fAcc: fromAccUpdate,
+      // tAcc: toAccUpdate
     });
   } catch (error) {
     return res.status(500).send({ "error": true, message: error.message })

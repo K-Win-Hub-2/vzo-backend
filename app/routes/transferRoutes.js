@@ -7,7 +7,7 @@ const  verifyToken= require('../lib/verifyToken');
 module.exports = (app) => {
 
     app.route('/api/transfer')
-        .post(verifyToken, catchError(transfer.createTransfer))
+        .post(catchError(transfer.createTransfer))
         .put( verifyToken, catchError(transfer.updateTransfer))
         
     app.route('/api/transfer/:id')

@@ -8,7 +8,7 @@ const verifyToken = require('../lib/verifyToken');
 module.exports = (app) => {
 
     app.route('/api/expense')
-        .post(verifyToken, catchError(expense.createExpense))
+        .post(catchError(expense.createExpense))
         .put(verifyToken, catchError(expense.updateExpense))
 
     app.route('/api/expense/:id')

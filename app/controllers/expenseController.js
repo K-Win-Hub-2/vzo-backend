@@ -52,7 +52,7 @@ exports.createExpense = async (req, res, next) => {
     try {
 
         let newBody = req.body;
-        newBody = { ...newBody, createdBy: req.credentials.id }
+        newBody = { ...newBody, createdBy: req.credentials?.id || null }
         console.log(newBody)
         const newExpense = new Expense(newBody);
         const result = await newExpense.save();

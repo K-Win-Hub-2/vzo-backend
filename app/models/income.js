@@ -9,36 +9,23 @@ let IncomeSchema = new Schema({
     createdAt: {
         type: Date,
     },
-    cashName:{
-      type: String
+    name: {
+        type: String,
+        required: true
     },
-    cashAmount: {
+    account: {
+        type: mongoose.Types.ObjectId,
+        ref: "AccountingLists"
+    },
+    branch: {
+        type: mongoose.Types.ObjectId,
+        ref: "Branches"
+    },
+    amount: {
         type: Number
     },
-    firstBank:[{
-        bankname: String,
-        amount:Number
-    }],
-    secondBank:[{
-        bankname: String,
-        amount:Number
-    }],
-    secondCash:[{
-        cashname: String,
-        amount:Number
-    }],
-    month:{
-        type:String,
-        enum:["Jan","Feb","March","April","May","June","July","Aug","Sept","Oct","Nov","Dec"]
-    },
-    totalIncomeAmount:{
-        type:Number
-    },
-    totalBankIncomeAmount:{
-        type:Number
-    },
-    totalCashIncomeAmount:{
-        type:Number
+    reason: {
+        type: String
     },
     isDeleted: {
         type: Boolean,

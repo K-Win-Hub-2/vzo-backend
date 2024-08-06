@@ -9,7 +9,7 @@ let PurchaseSchema = new Schema({
     confirmPurchase: {
         type: Boolean,
         default: false,
-    },
+    },  
     purchaseDate: {
         type: Date,
     },

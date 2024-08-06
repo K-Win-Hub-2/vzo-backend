@@ -10,13 +10,8 @@ exports.startDateEndDateHelper = (date) => {
         startDate = moment.tz(endDate, "Asia/Yangon").subtract(1, "day").startOf("day").format()
     }
     else if(date.value == "add"){
-        console.log("add", date.exact)
         startDate = new Date(date.exact).toISOString()
-        endDate = moment.tz(endDate, "Asia/Yangon").add(1, "day").startOf("day").format()
-    }
-    else{
-        startDate = moment.tz(date.startDate, "Asia/Yangon").startOf("day").format(),
-        endDate = moment.tz(date.endDate, "Asia/Yangon").startOf("day").format()
+        endDate = moment.tz(startDate, "Asia/Yangon").add(1, "day").startOf("day").format()
     }
     return { startDate: startDate, endDate: endDate}
 }

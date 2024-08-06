@@ -14,7 +14,7 @@ let AccountBalance = new Schema({
     type: {
         type: String,
         default: "Closing",
-        enum: ['Opening', 'Closing']
+        enum: ['Closing']
     },
     amount: {
         type: Number,
@@ -24,6 +24,10 @@ let AccountBalance = new Schema({
     },
     remark: {
         type: String,
+    },
+    transferAmount: {
+        type: Number,
+        default: 0
     },
     relatedBranch: {
         type: mongoose.Schema.Types.ObjectId,

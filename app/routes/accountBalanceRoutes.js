@@ -8,7 +8,7 @@ const verifyToken = require('../lib/verifyToken');
 module.exports = (app) => {
 
     app.route('/api/account-balance')
-        .post(verifyToken, catchError(accountBalance.createAccountBalance))
+        .post(catchError(accountBalance.createAccountBalance))
         .put(verifyToken, catchError(accountBalance.updateAccountBalance))
 
     app.route('/api/account-balance/:id')

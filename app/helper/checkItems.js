@@ -1,7 +1,6 @@
 const itemPackage = require("../models/itemPackage")
 const items = require("../models/items")
 
-
 exports.checkItemsifPacakgeAvailable = async (req,res, next) => {
     const itemData = await items.findById(req.body.relatedItem).exec()
     const Values = itemData.totalUnit - req.body.totalUnit
@@ -137,7 +136,6 @@ exports.subtractPackage = async (id, total) => {
         console.log("Error is ", e.message)
     }
 }
-
 
 exports.substractItemsArrayifPackageAvailable = async (itemArray, quantity) => {
     try{

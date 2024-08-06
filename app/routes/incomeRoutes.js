@@ -1,27 +1,19 @@
-"use strict";
+"use strict"
 
-const income = require("../controllers/incomeController");
+const { listAllData, createData, dataById, updateDataById, deleteDataById } = require("../controllers/controller")
 const { catchError } = require("../lib/errorHandler");
 const verifyToken = require('../lib/verifyToken');
 
 module.exports = (app) => {
 
-    app.route('/api/income')
-        .post(verifyToken, catchError(income.createIncome))
-        .put(verifyToken, catchError(income.updateIncome))
+    app.route('/api/v1/income')
+        .get(listAllData)
+        .post(catchError(createData))
 
-    app.route('/api/income/:id')
-        .get(verifyToken, catchError(income.getIncome))
-        .delete(verifyToken, catchError(income.deleteIncome))
-        .post(verifyToken, catchError(income.activateIncome))
-
-    app.route('/api/incomes').get(verifyToken, catchError(income.listAllIncome))
-    app.route('/api/incomes/get-date').get(verifyToken, catchError(income.getwithExactDate))
-    app.route('/api/incomes/filter').get(verifyToken, catchError(income.incomeFilter))
-    app.route('/api/incomes/total-income').get(verifyToken, catchError(income.totalIncome))
-    app.route('/api/incomes-filter')
-        .get(verifyToken, catchError(income.filterIncome))
-
-    app.route('/api/incomes-search')
-        .get(verifyToken, catchError(income.searchIncome))
+        
+    app.route('/api/v1/income/:id')
+        .get(catchError(dataById)) 
+        .put(catchError(updateDataById))
+        .delete(catchError(deleteDataById))
+    
 };

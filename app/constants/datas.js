@@ -1,5 +1,6 @@
 const { calculateTotalIncome } = require("../services/calculateTotalIncome");
 const { getAllDamageItems, createDamageItems, updateDamageItem, getDamageItemById, deleteDamageItem } = require("../services/damagePersonalService");
+const { listAllIncome, createIncome, updateIncome, getIncomeById, deleteIncome } = require("../services/incomeService");
 const { getAllItemPackage, createitemsPackage, updateItemPackage, getItemPackageById, deleteItemPackage } = require("../services/itemPackageService");
 const { deleteItem, getItemById, updateItem, createItems, getAllItems } = require("../services/itemService");
 const { getAllItemTitles, createItemTitle, updateTitleItem, getItemTitleById, deleteTitleItem } = require("../services/itemTitleService");
@@ -60,6 +61,13 @@ exports.ServiceDatas = {
         update: updateItemVoucher,
         listById: getItemVoucherById,
         delete: deleteItemVoucher
+    },
+    "income":{
+        list: listAllIncome,
+        create: createIncome,
+        update: updateIncome,
+        listById: getIncomeById,
+        delete: deleteIncome
     },
     "sale-stock-and-package": {
         list: getSaleItemsAndPackage
