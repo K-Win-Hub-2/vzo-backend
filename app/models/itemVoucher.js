@@ -67,6 +67,10 @@ let ItemVoucherSchema = new Schema({
         type: String,
         enum: ['Amount', 'Percent', 'FOC']
     },
+    relatedCustomer: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Patients'
+    },
     relatedItem: [{
         item_id: {
           type: mongoose.Schema.Types.ObjectId,
