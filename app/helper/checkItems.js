@@ -168,9 +168,9 @@ exports.addItemsArrayifPackageAvailable = async (itemArray) => {
 //if purchase add quantity
 exports.addItemsArrayifPurchase = (itemArray) => {
     try{
-        for(let i=0; i<itemArray.length; i++){
+        for(let i=0; i < itemArray.length; i++){
             items.findOne({_id:itemArray[i].item_id}).then(function(item){
-                item.currentQuantity += itemArray[i].qty
+                item.currentQuantity += Number(itemArray[i].qty)
                 item.totalUnit = Math.ceil(item.currentQuantity * item.toUnit/ item.fromUnit)
                 item.purchasePrice = itemArray[i].price
                 item.save()
