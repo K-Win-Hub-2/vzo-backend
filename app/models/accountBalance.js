@@ -11,15 +11,13 @@ let AccountBalance = new Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'AccountingLists'
     },
-    type: {
-        type: String,
-        default: "Closing",
-        enum: ['Closing']
-    },
-    amount: {
+    openingAmount: {
         type: Number,
     },
-    date: {
+    closingAmount: {
+        type: Number
+    },
+    createdAt: {
         type: Date,
     },
     remark: {

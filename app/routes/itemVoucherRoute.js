@@ -22,5 +22,8 @@ module.exports = (app) => {
     
     app.route('/api/v1/total-account-reports')
         .get(listAllData)
+
+    app.route('/api/v1/top-ten')
+       .get(listAllData)
     
 };

@@ -8,8 +8,22 @@ exports.voucherTotalCalculationService = async (data) => {
         let cashObject = {}
         let bankTotal = 0
         let cashTotal = 0
+        let purchase = 0
         let total = 0
         const datas = treatmentVoucher.data
+        //loop to calculate purchase price
+        datas.map(({ relatedItem, relatedPackage})=>{
+            if(relatedItem.length > 0){
+                relatedItem.map(items=>{
+                    purchase += items.item_id.purchasePrice * items.quantity
+                })
+            }
+            if(relatedPackage.length > 0){
+                relatedPackage.map(packages=>{
+                    purchase += packages.item_id.purchasePrice * packages.quantity
+                })
+            }
+        })
         let bankList = datas.filter(dat => dat.relatedBank)
         let cashList = datas.filter(dat => dat.relatedCash)
         let secondAccount = datas.filter(dat => dat.secondAccount)
@@ -35,6 +49,6 @@ exports.voucherTotalCalculationService = async (data) => {
         total += v
         cashTotal += v
        })
-       let result = { bank: bankObject,cash: cashObject, bankTotal: bankTotal, cashTotal: cashTotal, total: total }
+       let result = { bank: bankObject,cash: cashObject, bankTotal: bankTotal, cashTotal: cashTotal, total: total, purchaseTotal: purchase }
        return { data: result }
 }

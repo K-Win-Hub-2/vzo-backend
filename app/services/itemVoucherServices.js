@@ -23,6 +23,8 @@ exports.getAllItemVoucher = async (datas) => {
         code,
         relatedBank,
         relatedCash,
+        relatedPackage,
+        relatedItem,
         paymentType,
         secondPaymentType,
         relatedBranch,
@@ -116,6 +118,8 @@ exports.getAllItemVoucher = async (datas) => {
     if (cash)
         query.relatedCash = { $exists: true }
 
+    if (relatedPackage) query.relatedPackage = { $exists: true, $not: {$size: 0} }
+    if (relatedItem) query.relatedItem = { $exists:true, $not: {$size: 0} }
     if (sort) sortByAscending = { id: -1 }
     let count = await itemVoucher.find(query).count()
     let paginationHelpers = await paginationHelper(count, offset, limit) 

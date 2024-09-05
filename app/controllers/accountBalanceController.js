@@ -56,30 +56,51 @@ exports.getAccountBalance = async (req, res) => {
 exports.createAccountBalance = async (req, res, next) => {
     let newBody = req.body;
     try {
-        const { amount, date } = req.body;
-        const dateHelper = startDateEndDateHelper({exact: date, value: "add"})
-        let query = { isDeleted: false, date: {
-            $gte: moment.tz(dateHelper.startDate, "Asia/Yangon").startOf("day").format(),
-            $lt: moment.tz(dateHelper.endDate, "Asia/Yangon").startOf("day").format()
+        const { amount, createdAt } = req.body;
+        const dateHelper = startDateEndDateHelper({exact: createdAt, value: "add"})
+        let query = { 
+            isDeleted: false, 
+            createdAt: {
+                $gte: moment.tz(dateHelper.startDate, "Asia/Yangon").startOf("day").format(),
+                $lt: moment.tz(dateHelper.endDate, "Asia/Yangon").startOf("day").format()
         }}
-        const findAccountBalance = await AccountBalance.find(query).exec()
-        if(findAccountBalance.length > 0){
-            const result = await AccountBalance.findByIdAndUpdate(findAccountBalance[0]._id, req.body, {new: true})
+        const dateHelper1 = startDateEndDateHelper({exact: dateHelper.endDate, value: "add"})
+        let query1 = { 
+            isDeleted: false, 
+            createdAt: {
+                $gte: moment.tz(dateHelper1.startDate, "Asia/Yangon").startOf("day").format(),
+                $lt: moment.tz(dateHelper1.endDate, "Asia/Yangon").startOf("day").format()
+        }}
+        const findAccountBalance = await AccountBalance.findOne(query).exec()
+        const findAccountBalance1 = await AccountBalance.findOne(query1).exec()
+        if(findAccountBalance && findAccountBalance1){
+            const { openingAmount, ...data } = req.body
+            const result = await AccountBalance.findByIdAndUpdate(findAccountBalance._id, data, {new: true})
+            const newReqBody = { openingAmount: req.body.closingAmount }
+            const result1 = await AccountBalance.findByIdAndUpdate(findAccountBalance1._id, newReqBody, {new: true})
             res.status(200).send({
                 message: 'AccountBalance updated successfully',
                 success: true,
                 data: result
         });
         }else{
+            //firstDay Amount
             const newAccountBalance = new AccountBalance(newBody);
             const result = await newAccountBalance.save();
+            //secondDay Amount
+            const nextDayReqBody = { ...newBody }
+            nextDayReqBody.createdAt = dateHelper1.startDate.split("T")[0]
+            nextDayReqBody.openingAmount = newBody.closingAmount
+            nextDayReqBody.closingAmount = 0
+            nextDayReqBody.transferAmount = 0
+            const newAccountBalance2 = new AccountBalance(nextDayReqBody)
+            const result2 = await newAccountBalance2.save()
             res.status(200).send({
                 message: 'AccountBalance create success',
                 success: true,
                 data: result
         });
         }
-        
     } catch (error) {
         // console.log(error )
         return res.status(500).send({ "error": true, message: error.message })

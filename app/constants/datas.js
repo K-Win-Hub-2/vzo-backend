@@ -1,4 +1,4 @@
-const { calculateTotalIncome } = require("../services/calculateTotalIncome");
+const { calculateTotalIncome, totalTopTenList } = require("../services/calculateTotalIncome");
 const { getAllDamageItems, createDamageItems, updateDamageItem, getDamageItemById, deleteDamageItem } = require("../services/damagePersonalService");
 const { listAllIncome, createIncome, updateIncome, getIncomeById, deleteIncome } = require("../services/incomeService");
 const { getAllItemPackage, createitemsPackage, updateItemPackage, getItemPackageById, deleteItemPackage } = require("../services/itemPackageService");
@@ -77,5 +77,8 @@ exports.ServiceDatas = {
     },
     "total-account-reports": {
         list: calculateTotalIncome
+    },
+    "top-ten": {
+        list: totalTopTenList
     }
 }
