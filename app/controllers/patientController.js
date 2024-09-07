@@ -355,3 +355,42 @@ exports.topTenPatients = async (req, res) => {
     return res.status(500).send({ error: true, message: error.message });
   }
 };
+
+exports.listAllCustomers = async (req, res) => {
+  try {
+    let result = await Patient.find({ isDeleted: false });
+    let count = await Patient.find({ isDeleted: false }).count();
+    res.status(200).send({
+      success: true,
+      count: count,
+      data: result,
+    });
+  } catch (error) {
+    return res.status(500).send({ error: true, message: "No Record Found!" });
+  }
+};
+
+exports.getCustomer = async (req, res) => {
+  const result = await Patient.find({
+    _id: req.params.id,
+    isDeleted: false,
+  });
+  if (!result)
+    return res.status(500).json({ error: true, message: "No Record Found" });
+  return res.status(200).send({ success: true, data: result });
+};
+
+exports.createCustomer = async (req, res, next) => {
+  try {
+    const newcustomer = new Patient(req.body);
+    const result = await newcustomer.save();
+    res.status(200).send({
+      message: "Customer create success",
+      success: true,
+      data: result,
+    });
+  } catch (error) {
+    return res.status(500).send({ error: true, message: error.message });
+  }
+};
+

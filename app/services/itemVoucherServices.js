@@ -36,6 +36,7 @@ exports.getAllItemVoucher = async (datas) => {
         offset,
         sort
     } = datas
+    
     let sortByAscending = {id: 1}
     let query = {
         isDeleted: false
@@ -123,7 +124,7 @@ exports.getAllItemVoucher = async (datas) => {
     if (sort) sortByAscending = { id: -1 }
     let count = await itemVoucher.find(query).count()
     let paginationHelpers = await paginationHelper(count, offset, limit) 
-    let result = await itemVoucher.find(query).limit(paginationHelpers.limit).skip(paginationHelpers.skip).sort(sortByAscending).populate("relatedBank relatedCash relatedItem.item_id relatedPackage.item_id").populate({path: "secondAccount",populate:{ path: "relatedHeader"}}).exec()
+    let result = await itemVoucher.find(query).limit(paginationHelpers.limit).skip(paginationHelpers.skip).sort(sortByAscending).populate("relatedBank relatedCustomer relatedCash relatedItem.item_id relatedPackage.item_id").populate({path: "secondAccount",populate:{ path: "relatedHeader"}}).exec()
     return { data: result, meta_data: paginationHelpers};
 }
 
