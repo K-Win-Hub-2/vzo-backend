@@ -4,7 +4,6 @@ const mongoose = require('mongoose');
 mongoose.Promise = global.Promise;
 const Schema = mongoose.Schema;
 
-
 let ItemPackageSchema = new Schema({
   name: {
     type: String,
