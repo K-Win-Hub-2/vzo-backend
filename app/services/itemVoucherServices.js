@@ -108,7 +108,7 @@ exports.getAllItemVoucher = async (datas) => {
     if (secondAccount) 
         query.secondAccount = secondAccount
     
-    if (secondAmount) 
+    if (secondAmount)
         query.secondAmount = {
             $gte: secondAmount
         }
@@ -137,7 +137,7 @@ exports.createItemVoucher = async (datas) => {
     let result = await itemVoucher.create(datas)
     // creating debt if balance exist
     if (datas.balance) 
-        await createDebt({relatedItemVoucher: result._id, date: datas.createdAt, balance: datas.balance, isPaid: false})
+        await createDebt({ relatedItemVoucher: result._id, date: datas.createdAt, balance: datas.balance, isPaid: false})
     
     return result;
 }

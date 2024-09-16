@@ -8,15 +8,15 @@ const upload = require('../lib/fieldUploader').upload;
 module.exports = (app) => {
      app
        .route("/api/customers")
-       .post(verifyToken, catchError(patient.createCustomer));
+       .post( catchError(patient.createCustomer));
 
      app
        .route("/api/customers")
-       .get(verifyToken, catchError(patient.listAllCustomers));
+       .get( catchError(patient.listAllCustomers));
 
      app
        .route("/api/customer/:id")
-       .get(verifyToken, catchError(patient.getCustomer));
+       .get( catchError(patient.getCustomer));
 
     app.route('/api/patient')
         .post(upload, verifyToken, catchError(patient.createPatient))

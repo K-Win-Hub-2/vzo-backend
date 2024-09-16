@@ -70,7 +70,7 @@ exports.getSaleItemsAndPackage = async (datas) => {
         })
         queryRepackage.map(pk=>{
             const arr = pk.itemArray
-            arr.map(item=> item.item_id.equals(items._id) ? data.push({
+            arr.map(item => item.item_id?.equals(items._id) ? data.push({
                 _id: pk._id,
                 name: pk.name,
                 code: pk.code,

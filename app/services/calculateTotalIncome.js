@@ -29,10 +29,10 @@ exports.calculateTotalIncome = async (datas) => {
             $lt: moment.tz(querytodayVoucherDate.endDate, "Asia/Yangon").startOf("day").format()
         }
     }).exec()
-    const openingBalance = todayAccountBalance.openingAmount || 0
+    const openingBalance = todayAccountBalance?.openingAmount || 0
     data.openingBalance = openingBalance
     data.todayVoucherIncome = todayVoucherBalanceCalculation.data.total
-    data.transferBalance = todayAccountBalance.transferAmount || 0
+    data.transferBalance = todayAccountBalance?.transferAmount || 0
     data.purchaseTotal = todayVoucherBalanceCalculation.data.purchaseTotal || 0
     // reset yesterday Expese
     data.expense = 0
@@ -80,7 +80,7 @@ exports.totalTopTenList = async (datas) => {
     result.data.map((voucher) => {
         if (relatedItem) {
             voucher.relatedItem.map((item) => {
-                const Id = item.item_id._id.toString()
+                const Id = item.item_id?._id.toString()
                 unsortedObject[Id] = (unsortedObject[Id] || 0) + item.quantity
             })
         }
