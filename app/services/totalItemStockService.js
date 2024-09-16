@@ -30,14 +30,17 @@ exports.getAllStockIncludingRepackage = async (datas) => {
         result[item._id]["total"]["totalUnit"] = item.totalUnit
         result[item._id]["total"].currentQuantity = Math.ceil((result[item._id]["total"].totalUnit * result[item._id]["total"].fromUnit) / result[item._id]["total"].toUnit) 
         result[item._id]["package"] = []
-        queryRepackage.map(pk=>{           
-            pk.itemArray.map(pkItem=>{
-                if(pkItem.item_id._id.toString()===item._id.toString()){
+        queryRepackage.map(pk=>{  
+            if(pk.itemArray.length > 0){       
+                pk.itemArray.map(pkItem=>{
+                const compareId = pkItem.item_id ? pkItem.item_id._id.toString() : null
+                if(compareId===item._id.toString()){
                     result[item._id]["total"].totalUnit += ( pkItem.totalQuantity * pk.currentQuantity )
                     result[item._id]["total"].currentQuantity = Math.ceil((result[item._id]["total"].totalUnit * result[item._id]["total"].fromUnit) / result[item._id]["total"].toUnit) 
                     result[item._id]["package"].push(pk)
                 }
             })
+        }
         })
        })
        const data = Object.values(result)
