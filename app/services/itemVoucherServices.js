@@ -1,5 +1,6 @@
 "use strict" 
 const {substractCurrentQuantityOfItem, substractCurrentQuantityOfItemPackageArray, addItemsArrayifPurchase, addCurrentQuantityPackageArray} = require("../helper/checkItems")
+const { ItemIncome } = require("../helper/itemIncomeHelper")
 const { paginationHelper } = require("../helper/paginationHelper")
 const {generateVoucherCode} = require("../helper/voucherCodeGeneratorHelper")
 const itemVoucher = require("../models/itemVoucher")
@@ -133,6 +134,7 @@ exports.createItemVoucher = async (datas) => {
     datas.seq = additionalData.seq
     await substractCurrentQuantityOfItem(datas.relatedItem)
     await substractCurrentQuantityOfItemPackageArray(datas.relatedPackage)
+    await ItemIncome(datas.relatedItem, datas.relatedPackage)
     let result = await itemVoucher.create(datas)
     // creating debt if balance exist
     if (datas.balance) 
