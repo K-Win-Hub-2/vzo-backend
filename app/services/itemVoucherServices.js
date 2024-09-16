@@ -37,6 +37,7 @@ exports.getAllItemVoucher = async (datas) => {
         offset,
         sort
     } = datas
+    
     let sortByAscending = {id: 1}
     let query = {
         isDeleted: false
@@ -108,7 +109,7 @@ exports.getAllItemVoucher = async (datas) => {
     if (secondAccount) 
         query.secondAccount = secondAccount
     
-    if (secondAmount) 
+    if (secondAmount)
         query.secondAmount = {
             $gte: secondAmount
         }
@@ -124,7 +125,7 @@ exports.getAllItemVoucher = async (datas) => {
     if (sort) sortByAscending = { id: -1 }
     let count = await itemVoucher.find(query).count()
     let paginationHelpers = await paginationHelper(count, offset, limit) 
-    let result = await itemVoucher.find(query).limit(paginationHelpers.limit).skip(paginationHelpers.skip).sort(sortByAscending).populate("relatedBank relatedCash relatedItem.item_id relatedPackage.item_id").populate({path: "secondAccount",populate:{ path: "relatedHeader"}}).exec()
+    let result = await itemVoucher.find(query).limit(paginationHelpers.limit).skip(paginationHelpers.skip).sort(sortByAscending).populate("relatedBank relatedCustomer relatedCash relatedItem.item_id relatedPackage.item_id").populate({path: "secondAccount",populate:{ path: "relatedHeader"}}).exec()
     return { data: result, meta_data: paginationHelpers};
 }
 
@@ -138,7 +139,7 @@ exports.createItemVoucher = async (datas) => {
     let result = await itemVoucher.create(datas)
     // creating debt if balance exist
     if (datas.balance) 
-        await createDebt({relatedItemVoucher: result._id, date: datas.createdAt, balance: datas.balance, isPaid: false})
+        await createDebt({ relatedItemVoucher: result._id, date: datas.createdAt, balance: datas.balance, isPaid: false})
     
     return result;
 }

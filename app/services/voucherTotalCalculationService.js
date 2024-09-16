@@ -15,12 +15,12 @@ exports.voucherTotalCalculationService = async (data) => {
         datas.map(({ relatedItem, relatedPackage})=>{
             if(relatedItem.length > 0){
                 relatedItem.map(items=>{
-                    purchase += items.item_id.purchasePrice * items.quantity
+                    purchase += items.item_id?.purchasePrice * items.quantity
                 })
             }
             if(relatedPackage.length > 0){
                 relatedPackage.map(packages=>{
-                    purchase += packages.item_id.purchasePrice * packages.quantity
+                    purchase += packages.item_id?.purchasePrice * packages.quantity
                 })
             }
         })

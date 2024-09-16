@@ -88,8 +88,8 @@ exports.getTreatmentVoucherWithTreatmentID = async (req, res) => {
     let query = { isDeleted: false }
     if (req.params.id) query.relatedTreatmentSelection = req.params.id
     const result = await TreatmentVoucher.find(query).populate('createdBy relatedTreatment relatedAppointment relatedPatient')
-                                                    .populate({
-                                                        path: "repay",
+    .populate({
+                    path: "repay",
                                                         populate :{
                                                         path:"repayId",  
                                                         populate:[

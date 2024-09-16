@@ -6,6 +6,17 @@ const verifyToken = require("../lib/verifyToken");
 const upload = require('../lib/fieldUploader').upload;
 
 module.exports = (app) => {
+     app
+       .route("/api/customers")
+       .post( catchError(patient.createCustomer));
+
+     app
+       .route("/api/customers")
+       .get( catchError(patient.listAllCustomers));
+
+     app
+       .route("/api/customer/:id")
+       .get( catchError(patient.getCustomer));
 
     app.route('/api/patient')
         .post(upload, verifyToken, catchError(patient.createPatient))
