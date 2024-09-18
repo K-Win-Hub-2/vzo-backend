@@ -18,16 +18,16 @@ exports.excelImport = async (req,res) => {
         await items.create({
             name: result.name, 
             code: result.code, 
-            fromUnit: Number(result.fromUnit),
-            toUnit: Number(result.toUnit), 
-            totalUnit: Number(result.totalUnit),
-            currentQuantity: Number(result.currentQuantity),
-            sellingPrice: Number(result.sellingPrice),
-            purchasePrice: Number(result.purchasePrice),
-            deliveryPrice: Number(result.deliveryPrice),
-            reOrderQuantity: Number(result.reOrderQuantity),
-            relatedItemTitle: foodTitle._id,
-            relatedSuperCategory: foodCategory._id
+            fromUnit: Number(result.fromUnit) || 1,
+            toUnit: Number(result.toUnit) || 1, 
+            totalUnit: Number(result.totalUnit) || 0,
+            currentQuantity: Number(result.currentQuantity) || 0,
+            sellingPrice: Number(result.sellingPrice) || 0,
+            purchasePrice: Number(result.purchasePrice) || 0,
+            deliveryPrice: Number(result.deliveryPrice) || 0,
+            reOrderQuantity: Number(result.reOrderQuantity) || 0,
+            relatedItemTitle: foodTitle._id || null,
+            relatedSuperCategory: foodCategory._id || null
             })
     })
     res.status(200).json({success: true, message: "Import successful"})

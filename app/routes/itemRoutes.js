@@ -22,6 +22,6 @@ module.exports = (app) => {
         .delete(catchError(deleteDataById))
 
     app.route("/api/v1/excel/import")
-        .get(upload.single
+        .post(upload.single
         ("excel"), catchError(excelImport))
 };
