@@ -25,13 +25,13 @@ exports.excelImport = async (req, res) => {
         name: itemTitle,
       });
 
-      const item_name = result.name;
+      const item_name = result.name.split(" (VZO)")[0];
       const currentQty = result.currentQuantity;
       const code = result.code;
       const fromUnit = result.fromUnit;
       const toUnit = result.toUnit;
-      const purchasePrice = result.purchase_price;
-      const sellingPrice = result.selling_price;
+      const purchasePrice = result.purchasePrice;
+      const sellingPrice = result.sellingPrice;
       const title = result.title;
 
       if (!superCategory) {
@@ -50,11 +50,10 @@ exports.excelImport = async (req, res) => {
           {
             $set: {
               code: code,
-
               fromUnit: fromUnit,
               toUnit: toUnit,
               totalUnit: (currentQty * toUnit) / fromUnit,
-              currentQty: currentQty,
+              currentQuantity: currentQty,
               sellingPrice: sellingPrice,
               purchasePrice: purchasePrice,
               relatedSuperCategory: superID._id,
@@ -70,7 +69,7 @@ exports.excelImport = async (req, res) => {
           fromUnit: fromUnit,
           toUnit: toUnit,
           totalUnit: (currentQty * toUnit) / fromUnit,
-          currentQty: currentQty,
+          currentQuantity: currentQty,
           sellingPrice: sellingPrice,
           purchasePrice: purchasePrice,
           relatedSuperCategory: superID._id,
