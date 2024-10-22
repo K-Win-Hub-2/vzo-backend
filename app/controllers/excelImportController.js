@@ -13,27 +13,36 @@ exports.excelImport = async (req, res) => {
     const workSheet = workbook.Sheets[workbook.SheetNames[0]];
     const data = xlsx.utils.sheet_to_json(workSheet);
 
-    console.log("data", data);
+    // console.log("data", data);
 
     for (const result of data) {
-      const superCategory = result.superCategory.split(" (VZO)")[0];
+      // console.log(result, "res");
+      let trimmedData = {};
+      for (let key in result) {
+        // Use trim() on the key and assign the value
+        trimmedData[key.trim()] = result[key];
+      }
+
+      // console.log(trimmedData, "trimmedData");
+
+      const superCategory = trimmedData.superCategory.split(" (VZO)")[0];
       const superID = await superCategoryModels.findOne({
         name: superCategory,
       });
-      const itemTitle = result.title.split(" (VZO)")[0];
+      const itemTitle = trimmedData.title.split(" (VZO)")[0];
       const itemTitleID = await ItemTitle.findOne({
         name: itemTitle,
       });
 
-      const item_name = result.name.split(" (VZO)")[0];
-      const currentQty = result.currentQuantity;
-      const code = result.code;
-      const fromUnit = result.fromUnit;
-      const toUnit = result.toUnit;
-      const purchasePrice = result.purchasePrice;
-      const sellingPrice = result.sellingPrice;
-      const title = result.title;
-
+      const item_name = trimmedData.name.split(" (VZO)")[0];
+      const currentQty = trimmedData.currentQuantity;
+      const code = trimmedData.code;
+      const fromUnit = trimmedData.fromUnit;
+      const toUnit = trimmedData.toUnit;
+      const purchasePrice = trimmedData.purchasePrice;
+      const sellingPrice = trimmedData.sellingPrice;
+      const title = trimmedData.title;
+      // console.log("purchasePrice", purchasePrice);
       if (!superCategory) {
         console.error(`SuperCategory not found: ${superCategoryName}`);
         continue;
@@ -45,6 +54,8 @@ exports.excelImport = async (req, res) => {
       });
 
       if (existingItem) {
+        console.log(existingItem, "existingItem");
+        console.log(trimmedData, "result");
         await items.updateOne(
           { _id: existingItem._id },
           {
@@ -61,7 +72,6 @@ exports.excelImport = async (req, res) => {
             },
           }
         );
-        // console.log(`Updated item: ${item_name}`);
       } else {
         await items.create({
           name: item_name,
