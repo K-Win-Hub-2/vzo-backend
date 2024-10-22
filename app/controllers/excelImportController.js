@@ -103,7 +103,7 @@ exports.TitleExcelImport = async (req, res) => {
       const brandID = await Brand.findOne({ name: brand });
       // console.log(`superID:`, superID);
       const code = result.code;
-      const title = result.title;
+      const title = result.title.split(" (VZO)")[0];
       const description = result.description;
 
       const existingTitle = await ItemTitle.findOne({
