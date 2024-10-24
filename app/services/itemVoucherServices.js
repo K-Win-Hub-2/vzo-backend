@@ -129,21 +129,30 @@ exports.getAllItemVoucher = async (datas) => {
 };
 
 exports.createItemVoucher = async (datas) => {
-  console.log(datas, "datas");
   const additionalData = await generateVoucherCode();
   datas.code = additionalData.code;
   datas.seq = additionalData.seq;
   await substractCurrentQuantityOfItem(datas.relatedItem);
   await substractCurrentQuantityOfItemPackageArray(datas.relatedPackage);
   await ItemIncome(datas.relatedItem, datas.relatedPackage);
-
+  console.log(datas, "datas");
   if (datas.relatedCash) {
-    const Acc = await AccountList.find({ _id: datas.relatedCash._id });
+    const Acc = await AccountList.findById(datas.relatedCash);
     console.log(Acc, "Acc");
     await AccountList.findByIdAndUpdate(
-      datas.relatedCash._id,
+      datas.relatedCash,
       {
-        amount: parseInt(Acc[0].amount) + parseInt(datas.totalPaidAmount),
+        amount: parseInt(Acc.amount) + parseInt(datas.totalPaidAmount),
+      },
+      { new: true }
+    );
+  } else {
+    const Acc = await AccountList.findById(datas.relatedBank);
+    console.log(Acc, "Accsdddfasfsfasd");
+    await AccountList.findByIdAndUpdate(
+      datas.relatedBank,
+      {
+        amount: parseInt(Acc.amount) + parseInt(datas.totalPaidAmount),
       },
       { new: true }
     );
