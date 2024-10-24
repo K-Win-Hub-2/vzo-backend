@@ -51,6 +51,7 @@ exports.excelImport = async (req, res) => {
       const existingItem = await items.findOne({
         relatedItemTitle: itemTitleID._id,
         name: item_name,
+        relatedSuperCategory: superID._id,
       });
 
       if (existingItem) {
@@ -69,6 +70,7 @@ exports.excelImport = async (req, res) => {
               purchasePrice: purchasePrice,
               relatedSuperCategory: superID._id,
               relatedItemTitle: itemTitleID._id,
+              description: result.description,
             },
           }
         );
@@ -84,6 +86,7 @@ exports.excelImport = async (req, res) => {
           purchasePrice: purchasePrice,
           relatedSuperCategory: superID._id,
           relatedItemTitle: itemTitleID._id,
+          description: result.description,
         });
         // console.log(`Created new item: ${item_name}`);
       }
