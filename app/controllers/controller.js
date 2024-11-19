@@ -1,6 +1,9 @@
 "use strict";
 
 const registerServiceHelper = require("../helper/registerServiceHelper");
+const {
+  addItemsVoucherToUserShift,
+} = require("../helper/calculateVoucherWithShift");
 
 exports.listAllData = async (req, res) => {
   const paths = req.path.split("/v1/")[1];
@@ -8,14 +11,12 @@ exports.listAllData = async (req, res) => {
   let datas = await registerServiceHelper
     .getMethods(paths)[0]
     [paths].list(req.query);
-  res
-    .status(200)
-    .send({
-      success: true,
-      message: "Get All Datas",
-      data: datas.data,
-      meta_data: datas.meta_data,
-    });
+  res.status(200).send({
+    success: true,
+    message: "Get All Datas",
+    data: datas.data,
+    meta_data: datas.meta_data,
+  });
 };
 
 exports.createData = async (req, res) => {
@@ -23,6 +24,13 @@ exports.createData = async (req, res) => {
   let datas = await registerServiceHelper
     .getMethods(paths)[0]
     [paths].create(req.body);
+
+  const { createdBy } = req.body;
+
+  if (createdBy) {
+    addItemsVoucherToUserShift(createdBy);
+  }
+
   console.log(datas, "datas");
   res.status(200).send({ success: true, message: "Create Data", data: datas });
 };
