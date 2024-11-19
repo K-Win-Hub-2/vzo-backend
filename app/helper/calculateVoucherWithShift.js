@@ -46,7 +46,7 @@ const userShiftCalculate = async (relatedUser) => {
       const { shiftLoginTime, shiftLogOutTime } = shifts;
 
       if (!shiftLogOutTime) {
-        console.error("Incomplete shift data for shift ID:", shift._id);
+        console.error("Incomplete shift data for shift ID:", shifts._id);
         continue;
       }
 

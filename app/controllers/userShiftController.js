@@ -27,3 +27,49 @@ exports.updateUserShift = async (req, res) => {
     });
   }
 };
+
+exports.getUserShifs = async (req, res) => {
+  try {
+    const { userId } = req.query;
+    const { startDate, endDate, limit = 10, page = 1 } = req.query;
+
+    const query = {};
+
+    if (userId) {
+      query.relatedUser = userId;
+    }
+
+    if (startDate || endDate) {
+      query.shiftLoginTime = {};
+      if (startDate) query.shiftLoginTime.$gte = new Date(startDate);
+      if (endDate) query.shiftLoginTime.$lte = new Date(endDate);
+    }
+
+    const pageNumber = parseInt(page, 10);
+    const pageSize = parseInt(limit, 10);
+
+    const totalShifts = await userShiftModel.countDocuments(query);
+
+    const userShifts = await userShiftModel
+      .find(query)
+      .sort({ shiftLoginTime: -1 })
+      .skip((pageNumber - 1) * pageSize)
+      .limit(pageSize);
+
+    return res.status(200).send({
+      isSuccess: true,
+      message: "User shifts fetched successfully",
+      totalShifts,
+      currentPage: pageNumber,
+      totalPages: Math.ceil(totalShifts / pageSize),
+      data: userShifts,
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).send({
+      isSuccess: false,
+      message: "Error on the server",
+      error: error.message,
+    });
+  }
+};
