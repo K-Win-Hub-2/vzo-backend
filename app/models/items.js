@@ -1,34 +1,33 @@
-'use strict';
+"use strict";
 
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 mongoose.promise = global.Promise;
 const Schema = mongoose.Schema;
-
 
 let ItemSchema = new Schema({
   name: {
     type: String,
-    required: true
+    required: true,
   },
   code: {
-    type: String
+    type: String,
   },
   fromUnit: {
     type: Number,
-    required: true
+    required: true,
   },
   toUnit: {
     type: Number,
-    required: true
+    required: true,
   },
   totalUnit: {
     type: Number,
-    required: true
+    required: true,
   },
   currentQuantity: {
     type: Number,
     required: true,
-    default: 0
+    default: 0,
   },
   createdAt: {
     type: Date,
@@ -37,35 +36,40 @@ let ItemSchema = new Schema({
   sellingPrice: {
     type: Number,
     required: true,
-    default: 0
+    default: 0,
   },
   purchasePrice: {
     type: Number,
     required: true,
-    default: 0
+    default: 0,
   },
   deliveryPrice: {
     type: Number,
-    default: 0
+    default: 0,
   },
   reOrderQuantity: {
-    type: Number
+    type: Number,
+    default: 0,
+  },
+  uniqueQuantity: {
+    type: Number,
+    default: 0,
   },
   relatedSuperCategory: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'SuperCategories'
+    ref: "SuperCategories",
   },
   relatedItemTitle: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'ItemTitles'
+    ref: "ItemTitles",
   },
   isDeleted: {
     type: Boolean,
     required: true,
-    default: false
-  }
+    default: false,
+  },
 });
 
-module.exports = mongoose.model('Items', ItemSchema);
+module.exports = mongoose.model("Items", ItemSchema);
 
 //Author: Oakar Kyaw
