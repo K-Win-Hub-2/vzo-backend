@@ -72,7 +72,7 @@ exports.getShiftVoucher = async (req, res) => {
     const latestUserShift = await UserShiftModel.findOne({
       isDeleted: false,
     })
-      .populate("salesItemVouchers")
+      .populate("salesItemVouchers relatedShift relatedUser")
       .sort({ shiftLoginTime: -1 });
 
     if (!latestUserShift) {
