@@ -4,6 +4,7 @@ const registerServiceHelper = require("../helper/registerServiceHelper");
 const {
   addItemsVoucherToUserShift,
 } = require("../helper/calculateVoucherWithShift");
+const itemVoucherModel = require("../models/itemVoucher");
 
 exports.listAllData = async (req, res) => {
   const paths = req.path.split("/v1/")[1];
@@ -63,4 +64,29 @@ exports.deleteDataById = async (req, res) => {
   res
     .status(200)
     .send({ success: true, message: "delete Data By Id", data: datas });
+};
+
+exports.getShiftVoucher = async (req, res) => {
+  try {
+    const { relatedShift } = req.query;
+
+    const query = {
+      isDeleted: false,
+      relatedShift: relatedShift,
+    };
+
+    const itemVoucher = await itemVoucherModel.find(query);
+
+    return res.status(200).send({
+      isSuccess: true,
+      message: "Shift Voucher Fetched Successfully",
+      data: itemVoucher,
+    });
+  } catch (error) {
+    return res.status(500).send({
+      isSuccess: false,
+      message: "Error on the server",
+      error: error.message,
+    });
+  }
 };
