@@ -86,16 +86,16 @@ const addItemsVoucherToUserShift = async (createdBy) => {
       return;
     }
 
-    const vouchers = await itemsVoucher.find({
+    const query = {
       createdBy: createdBy,
-      createdAt: {
-        $gte: activeShift.shiftLoginTime,
-        $lte: shiftLoginTime || new Date(),
-      },
-    });
+      permissionDate: { $gte: activeShift.shiftLoginTime },
+    };
+
+    const vouchers = await itemsVoucher
+      .find(query)
+      .sort({ permissionDate: -1 });
 
     if (!vouchers || vouchers.length === 0) {
-      console.log("No vouchers found for user", createdBy);
       return;
     }
 

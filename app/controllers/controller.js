@@ -5,6 +5,7 @@ const {
   addItemsVoucherToUserShift,
 } = require("../helper/calculateVoucherWithShift");
 const itemVoucherModel = require("../models/itemVoucher");
+const UserShiftModel = require("../models/userShiftModel");
 
 exports.listAllData = async (req, res) => {
   const paths = req.path.split("/v1/")[1];
@@ -68,19 +69,23 @@ exports.deleteDataById = async (req, res) => {
 
 exports.getShiftVoucher = async (req, res) => {
   try {
-    const { relatedShift } = req.query;
-
-    const query = {
+    const latestUserShift = await UserShiftModel.findOne({
       isDeleted: false,
-      relatedShift: relatedShift,
-    };
+    })
+      .populate("salesItemVouchers")
+      .sort({ shiftLoginTime: -1 });
 
-    const itemVoucher = await itemVoucherModel.find(query);
+    if (!latestUserShift) {
+      return res.status(404).send({
+        isSuccess: false,
+        message: "No shift found",
+      });
+    }
 
     return res.status(200).send({
       isSuccess: true,
-      message: "Shift Voucher Fetched Successfully",
-      data: itemVoucher,
+      message: "Get shift voucher",
+      data: latestUserShift,
     });
   } catch (error) {
     return res.status(500).send({
