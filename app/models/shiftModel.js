@@ -12,12 +12,12 @@ const ShiftSchema = new Schema({
   shiftName: {
     type: String,
   },
-  relatedUser: {
-    type: Boolean,
-    ref: "Users",
-  },
   shiftLoginTime: {
     type: Date,
+    default: () => {
+      const now = new Date();
+      return new Date(now.setHours(9, 0, 0, 0));
+    },
   },
   shiftLogOutTime: {
     type: Date,

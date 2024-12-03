@@ -1,4 +1,49 @@
 const userShiftModel = require("../models/userShiftModel");
+const UserModel = require("../models/user");
+const shiftModel = require("../models/shiftModel");
+
+exports.createUserShift = async (req, res) => {
+  try {
+    const { relatedUser, relatedShift } = req.body;
+
+    const userDoc = await UserModel.findById(relatedUser);
+
+    if (!userDoc) {
+      return res.status(404).send({
+        isSuccess: false,
+        message: "User not found",
+      });
+    }
+
+    const shiftDoc = await shiftModel.findById(relatedShift);
+
+    if (!shiftDoc) {
+      return res.status(404).send({
+        isSuccess: false,
+        message: "Shift not found",
+      });
+    }
+
+    const addRelatedUserShift = await UserModel.findByIdAndUpdate(
+      { _id: relatedUser },
+      { relatedShift },
+      { new: true }
+    );
+
+    return res.status(201).send({
+      isSuccess: true,
+      message: "User shift created successfully",
+      data: addRelatedUserShift,
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).send({
+      isSuccess: false,
+      message: "Error on the server",
+      error: error.message,
+    });
+  }
+};
 
 exports.updateUserShift = async (req, res) => {
   const { id } = req.params;
