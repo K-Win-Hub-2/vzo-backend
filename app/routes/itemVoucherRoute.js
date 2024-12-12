@@ -7,6 +7,7 @@ const {
   updateDataById,
   deleteDataById,
   getShiftVoucher,
+  getAllItemVouchers,
 } = require("../controllers/controller");
 const {
   checkPackageArrayifStockIsAvailable,
@@ -38,4 +39,6 @@ module.exports = (app) => {
   app.route("/api/v1/top-ten").get(listAllData);
 
   app.route("/api/v1/shift-vouchers").get(getShiftVoucher);
+
+  app.route("/api/v1/item-vouchers").get(getAllItemVouchers);
 };

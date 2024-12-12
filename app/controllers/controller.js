@@ -21,6 +21,26 @@ exports.listAllData = async (req, res) => {
   });
 };
 
+exports.getAllItemVouchers = async (req, res) => {
+  try {
+    const itemVouchers = await itemVoucherModel
+      .find({ isDeleted: false })
+      .sort({ createdAt: -1 });
+
+    return res.status(200).send({
+      isSuccess: true,
+      message: "Get all item vouchers",
+      data: itemVouchers,
+    });
+  } catch (error) {
+    return res.status(500).send({
+      isSuccess: false,
+      message: "Error on the server",
+      error: error.message,
+    });
+  }
+};
+
 exports.createData = async (req, res) => {
   const paths = req.path.split("/v1/")[1];
   let datas = await registerServiceHelper
