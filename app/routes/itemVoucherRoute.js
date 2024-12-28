@@ -9,6 +9,7 @@ const {
   getShiftVoucher,
   getAllItemVouchers,
 } = require("../controllers/controller");
+const { itemRefund } = require("../lib/refundVoucherHelper");
 const {
   checkPackageArrayifStockIsAvailable,
   checkItemArrayifItemIsAvailable,
@@ -41,4 +42,6 @@ module.exports = (app) => {
   app.route("/api/v1/shift-vouchers").get(getShiftVoucher);
 
   app.route("/api/v1/item-vouchers").get(getAllItemVouchers);
+
+  app.route("/api/v1/refund-voucher/:id").post(catchError(itemRefund));
 };
