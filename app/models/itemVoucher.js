@@ -125,6 +125,7 @@ let ItemVoucherSchema = new Schema(
     },
     totalDiscount: {
       type: Number,
+      default: 0,
     },
     totalAmount: {
       type: Number,

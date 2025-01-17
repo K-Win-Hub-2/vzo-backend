@@ -1,43 +1,45 @@
-'use strict';
+"use strict";
 
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 mongoose.promise = global.Promise;
 const Schema = mongoose.Schema;
-const validator = require('validator');
+const validator = require("validator");
 
-
-let AccountBalance = new Schema({
+let AccountBalance = new Schema(
+  {
     relatedAccounting: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'AccountingLists'
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "AccountingLists",
     },
     openingAmount: {
-        type: Number,
+      type: Number,
     },
     closingAmount: {
-        type: Number
+      type: Number,
     },
     createdAt: {
-        type: Date,
+      type: Date,
     },
     remark: {
-        type: String,
+      type: String,
     },
     transferAmount: {
-        type: Number,
-        default: 0
+      type: Number,
+      default: 0,
     },
     relatedBranch: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Branches'
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Branches",
     },
     isDeleted: {
-        type: Boolean,
-        required: true,
-        default: false
-    }
-});
+      type: Boolean,
+      required: true,
+      default: false,
+    },
+  },
+  { timestamps: true }
+);
 
-module.exports = mongoose.model('AccountBalances', AccountBalance);
+module.exports = mongoose.model("AccountBalances", AccountBalance);
 
 //Author: Kyaw Zaw Lwin
