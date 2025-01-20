@@ -51,11 +51,10 @@ const AllSumTotalServices = async (req, res) => {
     const profitTotal = calculateProfitFun();
     // console.log(profitTotal);
 
-    // item voucher discount
+    // related item & voucher discount for net profit
     await calculateVoucherDiscountFun(start, end);
     await calculateRelatedItemDiscount(start, end);
 
-    // net profit
     const netProfitTotal = calculateNetProfitFun();
 
     return res.status(200).json({
@@ -68,11 +67,11 @@ const AllSumTotalServices = async (req, res) => {
           transferBalance: transferTotal,
           openingBalance: openingBalanceTotal,
           todayVoucherIncome: itemVoucherTotal,
-          totalItemSellingPrice: sellingPrice,
-          totalItemPurchasePrice: purchasePrice,
+          totalItemSellingPrice: sellingPrice ? sellingPrice : 0,
+          totalItemPurchasePrice: purchasePrice ? purchasePrice : 0,
           purchaseTotal: purchaseTotal,
-          profit: profitTotal,
-          netProfit: netProfitTotal,
+          profit: profitTotal ? profitTotal : 0,
+          netProfit: netProfitTotal ? netProfitTotal : 0,
           closingBalance: closingBalanceTotal,
         },
       ],
@@ -216,10 +215,21 @@ const calculateNetProfitFun = () => {
 
   const expenseTransferPurchase =
     totalExpense + totalTransferBalance + totalPurchase + discountTotal;
+
   const otherAndProfit = totalOtherIncome + totalProfit;
 
   const netProfit = otherAndProfit - expenseTransferPurchase;
   return netProfit;
 };
 
-module.exports = { AllSumTotalServices };
+module.exports = {
+  AllSumTotalServices,
+  calculateExpenseTotalFun,
+  calculateIncomeTotalFun,
+  calculateTransferTotalFun,
+  calculateOpeningBalanceFun,
+  calculateTodayVoucherTotalFun,
+  calculatePurchaseTotalFun,
+  calculateClosingBalanceFun,
+  calculateNetProfitFun,
+};

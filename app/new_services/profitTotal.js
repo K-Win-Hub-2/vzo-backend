@@ -17,7 +17,10 @@ const calculateSellingFun = async (start, end) => {
 
   relatedSellingDocs.forEach((doc) => {
     totalSellingPrice = doc.relatedItem.reduce((acc, cur) => {
-      // console.log(cur.item_id.sellingPrice);
+      if (cur.item_id === null) {
+        return (cur.item_id += 0);
+      }
+
       return acc + (cur.item_id.sellingPrice || 0);
     }, 0);
   });
@@ -38,6 +41,9 @@ const calculatePurchasePriceFun = async (start, end) => {
 
   relatedPurchaseDocs.forEach((doc) => {
     totalPurchasePrice = doc.relatedItem.reduce((acc, cur) => {
+      if (cur.item_id === null) {
+        return (cur.item_id += 0);
+      }
       return acc + (cur.item_id.purchasePrice || 0);
     }, 0);
   });
