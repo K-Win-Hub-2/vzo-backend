@@ -1,7 +1,5 @@
 const moment = require("moment");
 
-// const ExpenseModel = require("../models/expense");
-
 const {
   calculateExpenseTotalFun,
   calculateIncomeTotalFun,
@@ -46,13 +44,13 @@ const monthlyTotalSale = async (req, res) => {
       .year(year)
       .month(month - 1)
       .startOf("month")
-      .format();
+      .format('YYYY-MM-DD');
 
     const endOfMonth = moment()
       .year(year)
       .month(month - 1)
       .endOf("month")
-      .format();
+      .format('YYYY-MM-DD');
 
     // console.log("Start of month:", startOfMonth);
     // console.log("End of month:", endOfMonth);
