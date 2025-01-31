@@ -18,12 +18,10 @@ const calculateVoucherDiscountFun = async (start, end) => {
 
   // console.log("ItemVoucherDocs", ItemVoucherDocs);
 
-  if (ItemVoucherDocs.length !== 0) {
-    totalItemVoucherDiscount = ItemVoucherDocs.reduce(
-      (acc, cur) => acc + Math.floor(cur.totalDiscount),
-      0
-    );
-  }
+  totalItemVoucherDiscount = ItemVoucherDocs.reduce(
+    (acc, cur) => acc + Math.floor(cur.totalDiscount),
+    0
+  );
 
   return totalItemVoucherDiscount;
 };
@@ -42,6 +40,8 @@ const calculateRelatedItemDiscount = async (start, end) => {
   }).populate("relatedItem.item_id");
 
   if (relatedItemDiscountDocs.length !== 0) {
+    return (relatedItemDiscountDocs.length = 0);
+  } else {
     relatedItemDiscountDocs.forEach((doc) => {
       totalRelatedItemDiscount = doc.relatedItem.reduce((acc, cur) => {
         return acc + Math.floor(cur.discount);
