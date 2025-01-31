@@ -12,8 +12,8 @@ const {
 const {
   calculateVoucherDiscountFun,
   calculateRelatedItemDiscount,
-  calculateTotalDiscount,
-} = require("./netProfitTotal");
+  calculateDiscountTotal,
+} = require("./calculateDiscountTotal");
 
 // all sum total
 const AllSumTotalServices = async (req, res) => {
@@ -48,14 +48,13 @@ const AllSumTotalServices = async (req, res) => {
     // gross profit
     const sellingPrice = await calculateSellingFun(start, end);
     const purchasePrice = await calculatePurchasePriceFun(start, end);
-    const profitTotal = calculateProfitFun();
+    const profitTotal = await calculateProfitFun(start, end);
     // console.log(profitTotal);
 
     // related item & voucher discount for net profit
     await calculateVoucherDiscountFun(start, end);
     await calculateRelatedItemDiscount(start, end);
-
-    const netProfitTotal = calculateNetProfitFun();
+    const netProfitTotal = await calculateNetProfitFun(start, end);
 
     return res.status(200).json({
       success: true,
@@ -168,7 +167,7 @@ const calculateTodayVoucherTotalFun = async (start, end) => {
   const todayVoucherDocs = await ItemVoucherModel.find(todayVoucherQuery);
 
   todayItemVoucherAmount = todayVoucherDocs.reduce(
-    (acc, cur) => acc + cur.totalAmount,
+    (acc, cur) => acc + cur.totalPaidAmount,
     0
   );
 
@@ -209,16 +208,18 @@ const calculateClosingBalanceFun = async (start, end) => {
 };
 
 // total net profit
-const calculateNetProfitFun = () => {
-  const totalProfit = calculateProfitFun();
-  const discountTotal = calculateTotalDiscount();
+const calculateNetProfitFun = async (start, end) => {
+  const totalProfit = await calculateProfitFun(start, end);
+  const discountTotal = calculateDiscountTotal();
+
+  const otherAndProfit = totalOtherIncome + totalProfit;
 
   const expenseTransferPurchase =
     totalExpense + totalTransferBalance + totalPurchase + discountTotal;
 
-  const otherAndProfit = totalOtherIncome + totalProfit;
-
   const netProfit = otherAndProfit - expenseTransferPurchase;
+  // console.log("netProfit", netProfit);
+
   return netProfit;
 };
 

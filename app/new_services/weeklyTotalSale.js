@@ -19,7 +19,7 @@ const {
 const {
   calculateVoucherDiscountFun,
   calculateRelatedItemDiscount,
-} = require("./netProfitTotal");
+} = require("./calculateDiscountTotal");
 
 const weeklyTotalSale = async (req, res) => {
   try {
@@ -73,7 +73,8 @@ const weeklyTotalSale = async (req, res) => {
         await showAllWeeklyDataFun(weekRanges[3].start, weekRanges[3].end),
     };
 
-    if (!operations[weekNum]) {  // eg: operations[1]
+    if (!operations[weekNum]) {
+      // eg: operations[1]
       return res.status(400).json({
         success: false,
         message: "Invalid week number provided.",
@@ -136,13 +137,13 @@ const showAllWeeklyDataFun = async (start, end) => {
   // gross profit
   const sellingPrice = await calculateSellingFun(start, end);
   const purchasePrice = await calculatePurchasePriceFun(start, end);
-  const profitTotal = calculateProfitFun();
+  const profitTotal = await calculateProfitFun(start, end);
 
   // related item & voucher discount for net profit
   await calculateVoucherDiscountFun(start, end);
   await calculateRelatedItemDiscount(start, end);
 
-  const netProfitTotal = calculateNetProfitFun();
+  const netProfitTotal = await calculateNetProfitFun(start, end);
 
   // closing balance
   const closingBalanceTotal = await calculateClosingBalanceFun(start, end);

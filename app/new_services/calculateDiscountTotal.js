@@ -1,3 +1,4 @@
+const itemVoucher = require("../models/itemVoucher");
 const ItemVoucherModel = require("../models/itemVoucher");
 
 let totalItemVoucherDiscount = 0;
@@ -15,10 +16,14 @@ const calculateVoucherDiscountFun = async (start, end) => {
     },
   });
 
-  totalItemVoucherDiscount = ItemVoucherDocs.reduce(
-    (acc, cur) => acc + cur.totalDiscount,
-    0
-  );
+  // console.log("ItemVoucherDocs", ItemVoucherDocs);
+
+  if (ItemVoucherDocs.length !== 0) {
+    totalItemVoucherDiscount = ItemVoucherDocs.reduce(
+      (acc, cur) => acc + Math.floor(cur.totalDiscount),
+      0
+    );
+  }
 
   return totalItemVoucherDiscount;
 };
@@ -36,16 +41,18 @@ const calculateRelatedItemDiscount = async (start, end) => {
     "relatedItem.item_id": { $exists: true },
   }).populate("relatedItem.item_id");
 
-  relatedItemDiscountDocs.forEach((doc) => {
-    totalRelatedItemDiscount = doc.relatedItem.reduce((acc, cur) => {
-      return acc + cur.discount;
-    }, 0);
-  });
+  if (relatedItemDiscountDocs.length !== 0) {
+    relatedItemDiscountDocs.forEach((doc) => {
+      totalRelatedItemDiscount = doc.relatedItem.reduce((acc, cur) => {
+        return acc + Math.floor(cur.discount);
+      }, 0);
+    });
+  }
   return totalRelatedItemDiscount;
 };
 
 // total discount
-const calculateTotalDiscount = () => {
+const calculateDiscountTotal = () => {
   const totalDiscount = totalItemVoucherDiscount - totalRelatedItemDiscount;
   // console.log("totalDiscount", totalDiscount);
   return totalDiscount;
@@ -54,5 +61,5 @@ const calculateTotalDiscount = () => {
 module.exports = {
   calculateVoucherDiscountFun,
   calculateRelatedItemDiscount,
-  calculateTotalDiscount,
+  calculateDiscountTotal,
 };

@@ -19,7 +19,7 @@ const {
 const {
   calculateVoucherDiscountFun,
   calculateRelatedItemDiscount,
-} = require("./netProfitTotal");
+} = require("./calculateDiscountTotal");
 
 // total monthly sale income
 const monthlyTotalSale = async (req, res) => {
@@ -44,13 +44,13 @@ const monthlyTotalSale = async (req, res) => {
       .year(year)
       .month(month - 1)
       .startOf("month")
-      .format('YYYY-MM-DD');
+      .format("YYYY-MM-DD");
 
     const endOfMonth = moment()
       .year(year)
       .month(month - 1)
       .endOf("month")
-      .format('YYYY-MM-DD');
+      .format("YYYY-MM-DD");
 
     // console.log("Start of month:", startOfMonth);
     // console.log("End of month:", endOfMonth);
@@ -95,13 +95,19 @@ const monthlyTotalSale = async (req, res) => {
       startOfMonth,
       endOfMonth
     );
-    const profitTotal = calculateProfitFun();
+    // const profitTotal = calculateProfitFun();
+    const profitTotal = await calculateProfitFun(startOfMonth, endOfMonth);
+    // console.log("profitTotal", profitTotal);
 
     // related item & voucher discount for net profit
     await calculateVoucherDiscountFun(startOfMonth, endOfMonth);
     await calculateRelatedItemDiscount(startOfMonth, endOfMonth);
 
-    const netProfitTotal = calculateNetProfitFun();
+    const netProfitTotal = await calculateNetProfitFun(
+      startOfMonth,
+      endOfMonth
+    );
+    // console.log(netProfitTotal);
 
     // closing balance
     const closingBalanceTotal = await calculateClosingBalanceFun(
@@ -141,7 +147,7 @@ const monthlyTotalSale = async (req, res) => {
 // // total net profit
 // const calculateNetProfitFun = () => {
 //   const totalProfit = calculateProfitFun();
-//   const discountTotal = calculateTotalDiscount();
+//   const discountTotal = calculateDiscountTotal();
 
 //   const expenseTransferPurchase =
 //     totalExpense + totalTransferBalance + totalPurchase + discountTotal;
